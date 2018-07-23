@@ -6,6 +6,7 @@ public class ClientNetworkDiscovery : NetworkDiscovery
     public override void OnReceivedBroadcast(string fromAddress, string data)
     {
         StopBroadcast();
+
         string ip = "";
         bool ok = false;
         foreach (var c in fromAddress)
@@ -15,5 +16,7 @@ public class ClientNetworkDiscovery : NetworkDiscovery
         }
         Debug.Log(ip);
         Client.ipv4 = ip;
+
+
     }
 }
