@@ -62,8 +62,12 @@ public class Client : MonoBehaviour
         Debug.Log("StartClient");
         networkClient = new NetworkClient();
 
-        
         networkClient.Connect(ipv4, portTCP); // port server的端口，用于建立链接
+        networkClient.RegisterHandler(CustomMsgType.Choose, roleChooseHandler.OnReceiveChooseResult);
+        networkClient.RegisterHandler(CustomMsgType.RoleState, roleChooseHandler.OnReceiveRoleState);
+        networkClient.RegisterHandler(CustomMsgType.ClientChange, panelChanger.ChangePanel);
+       
+        networkClient.RegisterHandler(CustomMsgType.GroupState, joystickHandler.OnClientReciveMessage);
 
         panelChanger.EnableNetConnectionMaskPanel(false);
         //netConnectionController.EnableNetConnectionMaskPanel(false);

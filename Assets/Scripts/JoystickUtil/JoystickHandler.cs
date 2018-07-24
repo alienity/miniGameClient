@@ -11,7 +11,6 @@ public class JoystickHandler : MonoBehaviour
     //private Queue<JoystickControllMsg> jcmQueue;
     private PanelController panelController;
 
-    private bool flag = false;
 
     // Use this for initialization
     private void Start()
@@ -26,7 +25,10 @@ public class JoystickHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        SendUpdateJoystickControllMsg();
+        if (Client.Instance.networkClient.isConnected)
+        {
+            SendUpdateJoystickControllMsg();
+        }
     }
 
     public void OnClientReciveMessage(NetworkMessage netmsg)
@@ -56,16 +58,6 @@ public class JoystickHandler : MonoBehaviour
         jcm.uId = Client.Instance.uId;
         jcm.direction = dir;
         jcm.skill = skillUsed;
-
-        if (!flag && panelController.gamePanel.activeInHierarchy && Client.Instance.networkClient != null)
-        {
-            flag = true;
-            Client.Instance.networkClient.RegisterHandler(CustomMsgType.GroupState, OnClientReciveMessage);
-        }
-        else
-        {
-            return;
-        }
 
         Client.Instance.networkClient.Send(CustomMsgType.GroupControll, jcm);
     }

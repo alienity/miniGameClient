@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
@@ -14,7 +15,6 @@ public class RoleChooseHandler : MonoBehaviour
         if (roleChoosingController == null)
             roleChoosingController = FindObjectOfType<RoleChoosingController>();
 
-        if (networkClient == null) networkClient = Client.Instance.networkClient;
 
         InitAllButtons();
     }
@@ -45,14 +45,6 @@ public class RoleChooseHandler : MonoBehaviour
     private void ConfirmChoose(int gId, int uId)
     {
         ConfirmChooseMsg ccm = new ConfirmChooseMsg(gId, uId);
-
-        if (networkClient == null)
-        {
-            networkClient = Client.Instance.networkClient;
-
-            networkClient.RegisterHandler(CustomMsgType.Choose, OnReceiveChooseResult);
-            networkClient.RegisterHandler(CustomMsgType.RoleState, OnReceiveRoleState);
-        }
 
         networkClient.Send(CustomMsgType.Confirm, ccm);
     }

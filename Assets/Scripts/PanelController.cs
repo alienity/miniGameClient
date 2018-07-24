@@ -25,16 +25,7 @@ public class PanelController : MonoBehaviour
         panels.Add(gameOverPanel);
         panels.Add(connectingToNet);
     }
-
-    private void Update()
-    {
-        if (netClient == null || Client.Instance.networkClient == null)
-        {
-            netClient = Client.Instance.networkClient;
-            netClient.RegisterHandler(CustomMsgType.ClientChange, ChangePanel);
-        }
-    }
-
+    
     // 手动切换界面
     public void ChangePanelByHand()
     {
