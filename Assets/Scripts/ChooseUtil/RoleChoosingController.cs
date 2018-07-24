@@ -18,8 +18,8 @@ public class RoleChoosingController : MonoBehaviour {
     [HideInInspector] public Button[] buttons;
 
     [HideInInspector] public bool roleSelected = false;
-    [HideInInspector] public int selectedGid;
-    [HideInInspector] public int selectedUid;
+    //[HideInInspector] public int selectedGid;
+    //[HideInInspector] public int selectedUid;
 
     public System.Action confirmFinalAction;
 
@@ -69,8 +69,8 @@ public class RoleChoosingController : MonoBehaviour {
     public void SetRoleSelected(int gid, int uid)
     {
         roleSelected = true;
-        selectedGid = gid;
-        selectedUid = uid;
+        //selectedGid = gid;
+        //selectedUid = uid;
         buttons[gid*2 + uid].interactable = false;
     }
 }

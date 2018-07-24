@@ -25,7 +25,7 @@ public class JoystickHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Client.Instance.networkClient.isConnected)
+        if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
         {
             SendUpdateJoystickControllMsg();
         }
@@ -51,13 +51,17 @@ public class JoystickHandler : MonoBehaviour
         Joystick joystick = joystickController.joystick;
         Vector2 dir = new Vector2(joystick.Horizontal, joystick.Vertical);
         bool skillUsed = joystickController.skill;
+        bool finish = joystickController.finish;
         joystickController.skill = false;
+
+        //Debug.Log("gId = " + Client.Instance.gId + " , uId = " + Client.Instance.uId);
 
         JoystickControllMsg jcm = new JoystickControllMsg();
         jcm.gId = Client.Instance.gId;
         jcm.uId = Client.Instance.uId;
         jcm.direction = dir;
         jcm.skill = skillUsed;
+        jcm.finish = finish;
 
         Client.Instance.networkClient.Send(CustomMsgType.GroupControll, jcm);
     }

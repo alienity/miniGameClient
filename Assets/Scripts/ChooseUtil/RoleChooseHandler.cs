@@ -27,11 +27,9 @@ public class RoleChooseHandler : MonoBehaviour
             button.onClick.AddListener(delegate { SetRole(button); });
         }
         roleChoosingController.confirmButton.onClick.AddListener(delegate {
-            int gId = roleChoosingController.selectedGid;
-            int uId = roleChoosingController.selectedUid;
-            Client.Instance.gId = gId;
-            Client.Instance.uId = uId;
-            ConfirmChoose(roleChoosingController.selectedGid, uId);
+            int gId = Client.Instance.gId;
+            int uId = Client.Instance.uId;
+            ConfirmChoose(gId, uId);
 
             foreach (Button button in roleChoosingController.buttons)
                 button.interactable = false;
@@ -70,8 +68,8 @@ public class RoleChooseHandler : MonoBehaviour
         if (roleChoosingController.roleSelected)
         {
             chooseRequest.hasOld = true;
-            chooseRequest.oldGid = roleChoosingController.selectedGid;
-            chooseRequest.oldUid = roleChoosingController.selectedUid;
+            chooseRequest.oldGid = Client.Instance.gId;//roleChoosingController.selectedGid;
+            chooseRequest.oldUid = Client.Instance.uId;//roleChoosingController.selectedUid;
         }
 
         if (networkClient == null) networkClient = Client.Instance.networkClient;
@@ -83,6 +81,9 @@ public class RoleChooseHandler : MonoBehaviour
         RoleStateMsg roleState = netmsg.ReadMessage<RoleStateMsg>();
         int gid = roleState.gid;
         int uid = roleState.uid;
+
+        Debug.Log("gId = " + gid + " , uId = " + uid);
+
         if (roleState.available)
         {
             roleChoosingController.SetButtonRoleAvailable(gid, uid);
@@ -100,6 +101,8 @@ public class RoleChooseHandler : MonoBehaviour
         if (result.succeed)
         {
             roleChoosingController.SetRoleSelected(result.gid, result.uid);
+            Client.Instance.gId = result.gid;
+            Client.Instance.uId = result.uid;
             if (result.hasOld)
             {
                 roleChoosingController.SetButtonRoleAvailable(result.oldGid, result.oldUid);

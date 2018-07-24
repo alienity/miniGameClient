@@ -10,16 +10,21 @@ public class JoystickController : MonoBehaviour
     public FixedJoystick joystick;
     [Header("SkillButton")]
     public Button skillButton;
+    //public SkillButton skillButton;
     [HideInInspector]
     public bool skill = false;
+    public bool finish = false;
     
     public void ChangeSkillState(bool state)
     {
         skillButton.interactable = state;
+
     }
 
     private void Start()
     {
+        //skillButton.onClick = delegate { skill = true; };
+        //skillButton.onFinish = delegate { finish = true; };
         skillButton.onClick.AddListener(delegate { skill = true; });
     }
 
