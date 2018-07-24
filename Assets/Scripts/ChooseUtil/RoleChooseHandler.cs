@@ -46,7 +46,13 @@ public class RoleChooseHandler : MonoBehaviour
     {
         ConfirmChooseMsg ccm = new ConfirmChooseMsg(gId, uId);
 
-        if (networkClient == null) networkClient = Client.Instance.networkClient;
+        if (networkClient == null)
+        {
+            networkClient = Client.Instance.networkClient;
+
+            networkClient.RegisterHandler(CustomMsgType.Choose, OnReceiveChooseResult);
+            networkClient.RegisterHandler(CustomMsgType.RoleState, OnReceiveRoleState);
+        }
 
         networkClient.Send(CustomMsgType.Confirm, ccm);
     }

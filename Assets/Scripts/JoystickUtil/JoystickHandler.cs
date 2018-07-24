@@ -8,18 +8,23 @@ public class JoystickHandler : MonoBehaviour
 
     public JoystickController joystickController;
 
-    private Queue<JoystickControllMsg> jcmQueue;
-    private System.Action continueSendFunc;
+    //private Queue<JoystickControllMsg> jcmQueue;
+    private PanelController panelController;
+
+    private bool flag = false;
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         if (joystickController == null)
             joystickController = FindObjectOfType<JoystickController>();
-        jcmQueue = new Queue<JoystickControllMsg>();
+        if (panelController == null)
+            panelController = FindObjectOfType<PanelController>();
+        //jcmQueue = new Queue<JoystickControllMsg>();
+        
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         SendUpdateJoystickControllMsg();
     }
@@ -38,6 +43,9 @@ public class JoystickHandler : MonoBehaviour
     
     public void SendUpdateJoystickControllMsg()
     {
+        if (Client.Instance.gId == -1 || Client.Instance.uId == -1)
+            return;
+        
         Joystick joystick = joystickController.joystick;
         Vector2 dir = new Vector2(joystick.Horizontal, joystick.Vertical);
         bool skillUsed = joystickController.skill;
@@ -49,7 +57,17 @@ public class JoystickHandler : MonoBehaviour
         jcm.direction = dir;
         jcm.skill = skillUsed;
 
-        jcmQueue.Enqueue(jcm);
+        if (!flag && panelController.gamePanel.activeInHierarchy && Client.Instance.networkClient != null)
+        {
+            flag = true;
+            Client.Instance.networkClient.RegisterHandler(CustomMsgType.GroupState, OnClientReciveMessage);
+        }
+        else
+        {
+            return;
+        }
+
+        Client.Instance.networkClient.Send(CustomMsgType.GroupControll, jcm);
     }
 
 }

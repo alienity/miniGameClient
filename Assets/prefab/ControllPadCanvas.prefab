@@ -462,7 +462,7 @@ GameObject:
   - component: {fileID: 114613795398571764}
   - component: {fileID: 114239122995114974}
   - component: {fileID: 114921462372278910}
-  - component: {fileID: 114308339012754032}
+  - component: {fileID: 114906276217414338}
   m_Layer: 5
   m_Name: ControllPadCanvas
   m_TagString: Untagged
@@ -1893,18 +1893,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u5236\u4F5C\u8005\u540D\u5355"
---- !u!114 &114308339012754032
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1458326620107912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbb5d011c2134054d8d01165234e9d69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  netConnectionPanel: {fileID: 114326093900794540}
 --- !u!114 &114326093900794540
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3581,6 +3569,23 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: P1
+--- !u!114 &114906276217414338
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1458326620107912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e59654ceef99424898e21a4191eb00b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  preparePanel: {fileID: 1926788273210842}
+  startPanel: {fileID: 1698587079877026}
+  roomCanvas: {fileID: 1016546813532338}
+  gamePanel: {fileID: 1834834387834560}
+  gameOverPanel: {fileID: 1895478797571558}
+  connectingToNet: {fileID: 1475491565116742}
 --- !u!114 &114921462372278910
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4443,7 +4448,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224360060508782872
 RectTransform:
@@ -4491,7 +4496,7 @@ RectTransform:
   m_GameObject: {fileID: 1398734427859622}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 224356247830313790}
   m_Father: {fileID: 224858364938452738}
@@ -4500,7 +4505,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 450, y: 450}
-  m_SizeDelta: {x: 600, y: 600}
+  m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224367758421285136
 RectTransform:

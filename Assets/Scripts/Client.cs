@@ -9,11 +9,12 @@ public class Client : MonoBehaviour
     // 两个handler
     public RoleChooseHandler roleChooseHandler;
     public JoystickHandler joystickHandler;
-    public NetConnectMaskController netConnectionController;
+    //public NetConnectMaskController netConnectionController;
+    public PanelController panelChanger;
 
     // 获取到的gId和uId
-    [HideInInspector] public int gId;
-    [HideInInspector] public int uId;
+    [HideInInspector] public int gId = -1;
+    [HideInInspector] public int uId = -1;
 
     // 用于广播的ip地址
     public static string ipv4;
@@ -61,13 +62,10 @@ public class Client : MonoBehaviour
         Debug.Log("StartClient");
         networkClient = new NetworkClient();
 
-        networkClient.RegisterHandler(CustomMsgType.Choose, roleChooseHandler.OnReceiveChooseResult);
-        networkClient.RegisterHandler(CustomMsgType.RoleState, roleChooseHandler.OnReceiveRoleState);
-
-        networkClient.RegisterHandler(CustomMsgType.GroupState, joystickHandler.OnClientReciveMessage);
-
+        
         networkClient.Connect(ipv4, portTCP); // port server的端口，用于建立链接
 
-        netConnectionController.EnableNetConnectionMaskPanel(false);
+        panelChanger.EnableNetConnectionMaskPanel(false);
+        //netConnectionController.EnableNetConnectionMaskPanel(false);
     }
 }
