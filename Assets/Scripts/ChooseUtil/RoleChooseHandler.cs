@@ -3,57 +3,47 @@ using UnityEngine.Assertions;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-
 public class RoleChooseHandler : MonoBehaviour
 {
-    public RoleChoosingController roleChoosingController;
+    public RoleChoosingUIController roleChoosingUiController;
 
     private NetworkClient networkClient;
 
     private void Start()
     {
-        if (roleChoosingController == null)
-            roleChoosingController = FindObjectOfType<RoleChoosingController>();
-
-
+        if (roleChoosingUiController == null)
+            roleChoosingUiController = FindObjectOfType<RoleChoosingUIController>();
+        Debug.Assert(roleChoosingUiController != null);
         InitAllButtons();
     }
 
     private void InitAllButtons()
     {
-        roleChoosingController.InitButtons();
-        foreach (Button button in roleChoosingController.buttons)
+        roleChoosingUiController.InitButtons();
+        foreach (Button button in roleChoosingUiController.buttons)
         {
             button.onClick.AddListener(delegate { SetRole(button); });
         }
-        roleChoosingController.confirmButton.onClick.AddListener(delegate {
+        roleChoosingUiController.confirmButton.onClick.AddListener(delegate {
             int gId = Client.Instance.gId;
             int uId = Client.Instance.uId;
-            ConfirmChoose(gId, uId);
-
-            foreach (Button button in roleChoosingController.buttons)
-                button.interactable = false;
-
+            SendConfirmMessage(gId, uId);
+            roleChoosingUiController.OnConfirm();
             Debug.Log("确定了");
-
-            roleChoosingController.OnConfirm();
         });
     }
     
-    private void ConfirmChoose(int gId, int uId)
+    private void SendConfirmMessage(int gId, int uId)
     {
         ConfirmChooseMsg ccm = new ConfirmChooseMsg(gId, uId);
-
+//        Debug.Log("chooser uid " + uId);
         networkClient.Send(CustomMsgType.Confirm, ccm);
     }
 
     private void SetRole(Button selectButton)
     {
         int i;
-        for (i = 0; i < 8 && roleChoosingController.buttons[i] != selectButton; i++)
-        {
-
-        }
+        for (i = 0; i < 8 && roleChoosingUiController.buttons[i] != selectButton; i++);
 
         if (i == 8)
         {
@@ -65,11 +55,11 @@ public class RoleChooseHandler : MonoBehaviour
         ChooseRequestMsg chooseRequest = new ChooseRequestMsg();
         chooseRequest.gid = newGid;
         chooseRequest.uid = newUid;
-        if (roleChoosingController.roleSelected)
+        if (roleChoosingUiController.roleSelected)
         {
             chooseRequest.hasOld = true;
-            chooseRequest.oldGid = Client.Instance.gId;//roleChoosingController.selectedGid;
-            chooseRequest.oldUid = Client.Instance.uId;//roleChoosingController.selectedUid;
+            chooseRequest.oldGid = roleChoosingUiController.selectedGid;
+            chooseRequest.oldUid = roleChoosingUiController.selectedUid;
         }
 
         if (networkClient == null) networkClient = Client.Instance.networkClient;
@@ -81,31 +71,27 @@ public class RoleChooseHandler : MonoBehaviour
         RoleStateMsg roleState = netmsg.ReadMessage<RoleStateMsg>();
         int gid = roleState.gid;
         int uid = roleState.uid;
-
-        Debug.Log("gId = " + gid + " , uId = " + uid);
-
         if (roleState.available)
         {
-            roleChoosingController.SetButtonRoleAvailable(gid, uid);
+            roleChoosingUiController.SetButtonRoleAvailable(gid, uid);
         }
         else
         {
-            roleChoosingController.SetButtonRoleUnavailable(gid, uid);
+            roleChoosingUiController.SetButtonRoleUnavailable(gid, uid);
         }
     }
 
     public void OnReceiveChooseResult(NetworkMessage netmsg)
     {
         ChooseResultMsg result = netmsg.ReadMessage<ChooseResultMsg>();
-        Debug.Log("recerived " + result);
         if (result.succeed)
         {
-            roleChoosingController.SetRoleSelected(result.gid, result.uid);
+            roleChoosingUiController.SetRoleSelected(result.gid, result.uid);
             Client.Instance.gId = result.gid;
-            Client.Instance.uId = result.uid;
+            Client.Instance.uId = result.uid; 
             if (result.hasOld)
             {
-                roleChoosingController.SetButtonRoleAvailable(result.oldGid, result.oldUid);
+                roleChoosingUiController.SetButtonRoleAvailable(result.oldGid, result.oldUid);
             }
         }
     }

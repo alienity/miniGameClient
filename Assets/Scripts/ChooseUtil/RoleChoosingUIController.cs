@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RoleChoosingController : MonoBehaviour {
+public class RoleChoosingUIController : MonoBehaviour {
     public Button P1Pengu;
     public Button P1Pig;
     public Button P2Pengu;
@@ -17,16 +17,12 @@ public class RoleChoosingController : MonoBehaviour {
 
     [HideInInspector] public Button[] buttons;
 
-    [HideInInspector] public bool roleSelected = false;
-    //[HideInInspector] public int selectedGid;
-    //[HideInInspector] public int selectedUid;
+    public bool roleSelected { get; private set; } 
+    public int selectedGid { get; private set; }
+    public int selectedUid { get; private set; }
 
     public System.Action confirmFinalAction;
 
-    //void Start()
-    //{
-    //    InitButtons();
-    //}
     
     public void InitButtons()
     {
@@ -46,7 +42,8 @@ public class RoleChoosingController : MonoBehaviour {
         if (roleSelected == true)
         {
             // todo 在选择角色按钮上添加一层“蒙布”  而不是直接设置按钮 enable 属性为 false
-            
+            foreach (Button button in buttons)
+                button.interactable = false;
         }
     }
     

@@ -57,12 +57,15 @@ public class JoystickHandler : MonoBehaviour
         //Debug.Log("gId = " + Client.Instance.gId + " , uId = " + Client.Instance.uId);
 
         JoystickControllMsg jcm = new JoystickControllMsg();
+//        Debug.Log("client gid, uid " + Client.Instance.gId + " " + Client.Instance.gId);
+
         jcm.gId = Client.Instance.gId;
         jcm.uId = Client.Instance.uId;
         jcm.direction = dir;
         jcm.skill = skillUsed;
         jcm.finish = finish;
 
+//        Debug.Log("jotstick send gid, uid " + jcm.gId + " " + jcm.uId);
         Client.Instance.networkClient.Send(CustomMsgType.GroupControll, jcm);
     }
 
