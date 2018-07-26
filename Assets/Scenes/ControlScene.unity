@@ -724,6 +724,22 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6830ea0a0e4b7be4ebb7b3c551745979, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &391279222 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1458326620107912, guid: 6830ea0a0e4b7be4ebb7b3c551745979,
+    type: 2}
+  m_PrefabInternal: {fileID: 391279221}
+--- !u!114 &391279223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 391279222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45cc6986a5af4b06a0c84555a9f69c05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &662133508
 Prefab:
   m_ObjectHideFlags: 0
@@ -778,6 +794,11 @@ Prefab:
       propertyPath: panelChanger
       value: 
       objectReference: {fileID: 1844809092}
+    - target: {fileID: 114756466518910398, guid: 03b8ab48bf76cf44fb65c262c6b94722,
+        type: 2}
+      propertyPath: AdvanceControlHandler
+      value: 
+      objectReference: {fileID: 391279223}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 03b8ab48bf76cf44fb65c262c6b94722, type: 2}
   m_IsPrefabParent: 0

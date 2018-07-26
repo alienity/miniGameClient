@@ -1,6 +1,7 @@
-﻿using UnityEngine.Networking;
+﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class AdvanceControlHandler
+public class AdvanceControlHandler: MonoBehaviour
 {
     /*
      * 在这里写回调，然后在 Client.StartClient 把回调注册上去
@@ -10,6 +11,12 @@ public class AdvanceControlHandler
      */
     public void OnReceiveAdvanceControl(NetworkMessage netmsg)
     {
-        
+        AdvanceControlMsg advanceControlMsg = netmsg.ReadMessage<AdvanceControlMsg>();
+        switch (advanceControlMsg.type)
+        {
+                case AdvanceControlType.Viberate:
+                    Handheld.Vibrate();
+                    break;
+        }
     }
 }
