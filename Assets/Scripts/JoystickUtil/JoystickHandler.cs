@@ -12,6 +12,7 @@ public class JoystickHandler : MonoBehaviour
     private PanelController panelController;
 
 
+    public bool enableControl { get; set; }
     // Use this for initialization
     private void Start()
     {
@@ -25,7 +26,7 @@ public class JoystickHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
+        if (enableControl && Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
         {
             SendUpdateJoystickControllMsg();
         }
