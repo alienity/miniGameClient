@@ -66,9 +66,8 @@ public class Client : MonoBehaviour
         networkClient.RegisterHandler(CustomMsgType.Choose, roleChooseHandler.OnReceiveChooseResult);
         networkClient.RegisterHandler(CustomMsgType.RoleState, roleChooseHandler.OnReceiveRoleState);
         networkClient.RegisterHandler(CustomMsgType.ClientChange, panelChanger.ChangePanel);
-       
         networkClient.RegisterHandler(CustomMsgType.GroupState, joystickHandler.OnClientReciveMessage);
-
+        
         panelChanger.EnableNetConnectionMaskPanel(false);
         //netConnectionController.EnableNetConnectionMaskPanel(false);
     }
