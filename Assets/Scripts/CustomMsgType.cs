@@ -12,4 +12,5 @@ public class CustomMsgType
     public const short GroupRushSkill = MsgType.Highest + 8;   // 发送冲刺信息
     public const short GroupState = MsgType.Highest + 7;       // 发送到手机端状态信息
 
+    public const short AdvanceControl = MsgType.Highest + 10; // 震动等消息调用
 }
