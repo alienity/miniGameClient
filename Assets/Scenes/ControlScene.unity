@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -737,7 +737,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 391279222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45cc6986a5af4b06a0c84555a9f69c05, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ce09e5e13f9dd6469d7dca6cb19537a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &662133508
@@ -797,6 +797,11 @@ Prefab:
     - target: {fileID: 114756466518910398, guid: 03b8ab48bf76cf44fb65c262c6b94722,
         type: 2}
       propertyPath: AdvanceControlHandler
+      value: 
+      objectReference: {fileID: 391279223}
+    - target: {fileID: 114756466518910398, guid: 03b8ab48bf76cf44fb65c262c6b94722,
+        type: 2}
+      propertyPath: advanceControlHandler
       value: 
       objectReference: {fileID: 391279223}
     m_RemovedComponents: []

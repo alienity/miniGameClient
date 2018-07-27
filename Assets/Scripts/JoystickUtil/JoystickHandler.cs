@@ -24,15 +24,13 @@ public class JoystickHandler : MonoBehaviour
     private Queue<ChargeSkillMsg> csmQueue = new Queue<ChargeSkillMsg>();
     private Queue<RushSkillMag> rsmQueue = new Queue<RushSkillMag>();
 
+    public bool enableControl { get; set; }
+
     /// <summary>
     /// 为摇杆移动注册事件
     /// </summary>
     /// <param name="move"></param>
     public void OnJoystickMove(Vector2 move)
-
-    public bool enableControl { get; set; }
-    // Use this for initialization
-    private void Start()
     {
         int gId = Client.Instance.gId;
         int uId = Client.Instance.uId;
