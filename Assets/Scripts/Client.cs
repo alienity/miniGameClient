@@ -23,8 +23,8 @@ public class Client : MonoBehaviour
     
     private bool flagConnectServer = false;
     private int channelId;
-    private int portTCP = 5555;
-    private int portBroadCastUDP = 6666;
+    public static int portTCP = 5555;
+    public static int portBroadCastUDP = 6666;
 
     public NetworkClient networkClient;
 
@@ -32,7 +32,7 @@ public class Client : MonoBehaviour
 
 
     public int sessionId = -1;    // -1 作为空闲的sessionId
-    public Stage stage = Stage.Prepare;
+    public Stage stage = Stage.ChoosingRoleStage;
     
 
     private void Awake()
@@ -43,18 +43,19 @@ public class Client : MonoBehaviour
     private void Start()
     {
         flagConnectServer = false;
+        // Todo reconnectHandler生命周期和server相同，并且为了尽量避免对editor做改动，暂时就作为component挂载上server了
         reconnectHandler = gameObject.AddComponent<ReConnectHandler>();
         GetServerIP();
     }
 
-    private void FixedUpdate()
-    {
-        if(flagConnectServer==false && ipv4 != null)
-        {
-            flagConnectServer = true;
-            StartClient();
-        }
-    }
+//    private void FixedUpdate()
+//    {
+//        if(flagConnectServer==false && ipv4 != null)
+//        {
+//            flagConnectServer = true;
+//            StartClient();
+//        }
+//    }
 
     private void GetServerIP()  // 非阻塞
     {
@@ -65,20 +66,29 @@ public class Client : MonoBehaviour
         ClientDiscovery.StartAsClient();    // 非阻塞
     }
 
-    private void StartClient()
+    public void StartClient()
     {
         Debug.Log("StartClient");
         networkClient = new NetworkClient();
 
         networkClient.Connect(ipv4, portTCP); // port server的端口，用于建立链接
 //        networkClient.RegisterHandler(CustomMsgType.Choose, roleChooseHandler.OnReceiveChooseResult);
+        networkClient.RegisterHandler(MsgType.Connect, OnConnect);
+        networkClient.RegisterHandler(MsgType.Disconnect, reconnectHandler.OnDisconnect);
         networkClient.RegisterHandler(CustomMsgType.RoleState, roleChooseHandler.OnReceiveRoleState);
         networkClient.RegisterHandler(CustomMsgType.ClientChange, panelChanger.ChangePanel);
         networkClient.RegisterHandler(CustomMsgType.GroupState, joystickHandler.OnClientReciveMessage);
         networkClient.RegisterHandler(CustomMsgType.AdvanceControl, AdvanceControlHandler.OnReceiveAdvanceControl);
         networkClient.RegisterHandler(CustomMsgType.Session, reconnectHandler.OnReceiveSession);
+        networkClient.RegisterHandler(CustomMsgType.Stage, panelChanger.ChangeStage);
         
-        panelChanger.EnableNetConnectionMaskPanel(false);
-        //netConnectionController.EnableNetConnectionMaskPanel(false);
+    }
+
+    private void OnConnect(NetworkMessage netmsg)
+    {
+        if (stage == Stage.ConnectToNetStage)
+        {
+            panelChanger.SwitchToStage(Stage.ChoosingRoleStage);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -6,8 +7,12 @@ public class ReConnectHandler: MonoBehaviour
 {
     private PanelController panelController;
     private RoleChoosingUIController roleChoosingUiController;
+    private int curReconnectTimes;
+    public int maxReconnectTimes = 10; // 最大的尝试重连次数
+    public float waitTimePerTry = 10; // 每次重连尝试间的间隔时间
 
-    
+
+
     private void Start()
     {
         if (panelController == null)
@@ -50,7 +55,7 @@ public class ReConnectHandler: MonoBehaviour
             {
                 switch ((Stage)sessionMsg.stage)
                 {
-                        case Stage.Prepare:
+                        case Stage.ConnectToNetStage:
                             Debug.LogError("准备阶段掉线是不可能的");
                             return;
                         case Stage.ChoosingRoleStage:
@@ -71,9 +76,30 @@ public class ReConnectHandler: MonoBehaviour
     
     public void OnDisconnect(NetworkMessage netmsg)
     {
+        Debug.Log("disconnected");
         if (Client.Instance.stage == Stage.GammingStage || Client.Instance.stage == Stage.ChoosingRoleStage)
         {
             // todo 跳转到断线界面，并进行重连
+            panelController.SwitchToStage(Stage.OfflineStage);
+            StartCoroutine(TryToReConnect());
+        }
+    }
+
+    private IEnumerator TryToReConnect()
+    {
+        while (!Client.Instance.networkClient.isConnected && Client.Instance.networkClient.ReconnectToNewHost(Client.ipv4, Client.portTCP) && (curReconnectTimes++ < maxReconnectTimes))
+        {
+            Debug.Log("reconnecting to game, time: " + curReconnectTimes);
+            yield return new WaitForSeconds(waitTimePerTry);      
+        }
+
+        if (Client.Instance.networkClient.isConnected)
+        {
+            Debug.Log("reconnected！");
+        }
+        else
+        {
+            Debug.Log("can not reconnected");
         }
     }
 

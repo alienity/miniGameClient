@@ -51,6 +51,12 @@ public class PanelController : MonoBehaviour
         }
     }
 
+    public void ChangeStage(NetworkMessage netmsg)
+    {
+        StageTransferMsg stageTransferMsg = netmsg.ReadMessage<StageTransferMsg>();
+        SwitchToStage((Stage)stageTransferMsg.stage);
+    }
+
     public void SwitchToStage(Stage stage)
     {
         Client.Instance.stage = stage;
@@ -62,8 +68,13 @@ public class PanelController : MonoBehaviour
         joystickHandler.enableControl = false;
         switch (stage)
         {
-                case Stage.Prepare:
-                    preparePanel.SetActive(true);
+                case Stage.StartStage:
+                    Client.Instance.networkClient.Disconnect();
+                    startPanel.SetActive(true);
+                    break;
+                case Stage.ConnectToNetStage:
+                    connectingToNet.SetActive(true);
+                    Client.Instance.StartClient();
                     break;
                 case Stage.ChoosingRoleStage:
                     roomCanvas.SetActive(true);
@@ -74,10 +85,4 @@ public class PanelController : MonoBehaviour
                     break;
         }
     }
-
-    public void EnableNetConnectionMaskPanel(bool enable)
-    {
-        connectingToNet.SetActive(enable);
-    }
-
 }
