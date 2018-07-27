@@ -14,8 +14,8 @@ public class Client : MonoBehaviour
     public PanelController panelChanger;
 
     // 获取到的gId和uId
-    [HideInInspector] public int gId = -1;
-    [HideInInspector] public int uId = -1;
+    public int gId = -1;
+    public int uId = -1;
 
     // 用于广播的ip地址
     public static string ipv4;
@@ -73,4 +73,11 @@ public class Client : MonoBehaviour
         panelChanger.EnableNetConnectionMaskPanel(false);
         //netConnectionController.EnableNetConnectionMaskPanel(false);
     }
+
+    // 
+    private void InitAllPanels()
+    {
+
+    }
+
 }
