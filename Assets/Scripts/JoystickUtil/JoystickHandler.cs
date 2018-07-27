@@ -8,10 +8,6 @@ public class JoystickHandler : MonoBehaviour
 
     // 现在不需要JoystickController，使用EasyTouch插件，完成摇杆和技能的操控
 
-
-    //public JoystickController joystickController;
-    //private PanelController panelController;
-
     // 摇杆对象
     public ETCJoystick eTCJoystick;
     // 蓄力对象
@@ -33,6 +29,10 @@ public class JoystickHandler : MonoBehaviour
     /// </summary>
     /// <param name="move"></param>
     public void OnJoystickMove(Vector2 move)
+
+    public bool enableControl { get; set; }
+    // Use this for initialization
+    private void Start()
     {
         int gId = Client.Instance.gId;
         int uId = Client.Instance.uId;
@@ -99,7 +99,7 @@ public class JoystickHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(networkClient == null)
+        if (enableControl && Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
         {
             if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
                 networkClient = Client.Instance.networkClient;

@@ -15,6 +15,7 @@ public class PanelController : MonoBehaviour
     public NetworkClient netClient;
 
     private List<GameObject> panels = new List<GameObject>();
+    private JoystickHandler joystickHandler;
 
     private void Start()
     {
@@ -24,6 +25,8 @@ public class PanelController : MonoBehaviour
         panels.Add(gamePanel);
         panels.Add(gameOverPanel);
         panels.Add(connectingToNet);
+        joystickHandler = FindObjectOfType<JoystickHandler>();
+        Debug.Assert(joystickHandler != null);
     }
     
     // 手动切换界面
@@ -42,6 +45,8 @@ public class PanelController : MonoBehaviour
         // 暂时先设置成只从要转换的下一个场景读
         if(nextSceneName == "GameScene")
         {
+            // 切换到游戏场景后**才**开始发送摇杆信息
+            joystickHandler.enableControl = true;
             foreach (GameObject pgo in panels)
             {
                 pgo.SetActive(false);
