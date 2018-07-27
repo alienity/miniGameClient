@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class RoleChooseHandler : MonoBehaviour
 {
-    public RoleChoosingUIController roleChoosingUiController;
+    private RoleChoosingUIController roleChoosingUiController;
 
     private NetworkClient networkClient;
 

@@ -12,6 +12,7 @@ public class Client : MonoBehaviour
     public AdvanceControlHandler AdvanceControlHandler;
     //public NetConnectMaskController netConnectionController;
     public PanelController panelChanger;
+    private ReConnectHandler reconnectHandler;
 
     // 获取到的gId和uId
     [HideInInspector] public int gId = -1;
@@ -29,6 +30,11 @@ public class Client : MonoBehaviour
 
     private ClientNetworkDiscovery ClientDiscovery;
 
+
+    public int sessionId = -1;    // -1 作为空闲的sessionId
+    public Stage stage = Stage.Prepare;
+    
+
     private void Awake()
     {
         Instance = this;
@@ -37,6 +43,7 @@ public class Client : MonoBehaviour
     private void Start()
     {
         flagConnectServer = false;
+        reconnectHandler = gameObject.AddComponent<ReConnectHandler>();
         GetServerIP();
     }
 
@@ -69,6 +76,7 @@ public class Client : MonoBehaviour
         networkClient.RegisterHandler(CustomMsgType.ClientChange, panelChanger.ChangePanel);
         networkClient.RegisterHandler(CustomMsgType.GroupState, joystickHandler.OnClientReciveMessage);
         networkClient.RegisterHandler(CustomMsgType.AdvanceControl, AdvanceControlHandler.OnReceiveAdvanceControl);
+        networkClient.RegisterHandler(CustomMsgType.Session, reconnectHandler.OnReceiveSession);
         
         panelChanger.EnableNetConnectionMaskPanel(false);
         //netConnectionController.EnableNetConnectionMaskPanel(false);

@@ -67,7 +67,9 @@ public class JoystickHandler : MonoBehaviour
         jcm.finish = finish;
 
 //        Debug.Log("jotstick send gid, uid " + jcm.gId + " " + jcm.uId);
-        Client.Instance.networkClient.Send(CustomMsgType.GroupControll, jcm);
+//        Client.Instance.networkClient.Send(CustomMsgType.GroupControll, jcm);
+        // todo 为了能通过编译把GroupControll 改为了 GroupJoystick，合并是请注意修改   --xinnjie
+        Client.Instance.networkClient.Send(CustomMsgType.GroupJoystick, jcm);
     }
 
 }
