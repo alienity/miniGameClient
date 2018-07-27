@@ -19,6 +19,7 @@ public class RoleChooseHandler : MonoBehaviour
 
     private void InitAllButtons()
     {
+        roleChoosingUiController.InitBackSpritesUI();
         roleChoosingUiController.InitButtons();
         foreach (Button button in roleChoosingUiController.buttons)
         {
@@ -28,7 +29,7 @@ public class RoleChooseHandler : MonoBehaviour
             int gId = Client.Instance.gId;
             int uId = Client.Instance.uId;
             SendConfirmMessage(gId, uId);
-            roleChoosingUiController.OnConfirm();
+            roleChoosingUiController.OnConfirm(gId, uId);
             Debug.Log("确定了");
         });
     }
