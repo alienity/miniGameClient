@@ -92,6 +92,7 @@ public class RoleChooseHandler : MonoBehaviour
             Client.Instance.uId = result.uid; 
             if (result.hasOld)
             {
+                Debug.Log("result.hasOld" + result.oldGid + result.oldUid);
                 roleChoosingUiController.SetButtonRoleAvailable(result.oldGid, result.oldUid);
             }
         }

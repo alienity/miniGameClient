@@ -60,7 +60,7 @@ public class RoleChoosingUIController : MonoBehaviour {
         buttons[5] = P3Pig;
         buttons[6] = P4Pengu;
         buttons[7] = P4Pig;
-
+        confirmButton.GetComponent<Image>().sprite = ConfrimButtonNoPush;
         for (int i = 0; i < 4; ++i)
         {
             //button.image.color = Color.white;D:\github_MiniGame\miniGameServer\Assets\Resource\Textures\ChooseRoleSceneICon
@@ -83,6 +83,7 @@ public class RoleChoosingUIController : MonoBehaviour {
             }
             buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadLock : PigHeadLock;
             spritesUI[gid].StarImage.gameObject.SetActive(true);
+            confirmButton.GetComponent<Image>().sprite = ConfrimButtonPushed;
         }
     }
     
@@ -123,8 +124,8 @@ public class RoleChoosingUIController : MonoBehaviour {
     public void SetRoleSelected(int gid, int uid)
     {
         roleSelected = true;
-        //selectedGid = gid;
-        //selectedUid = uid;
+        selectedGid = gid;
+        selectedUid = uid;
         //buttons[gid*2 + uid].interactable = false;
         if (uid == 0)
         {
