@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
@@ -25,7 +24,9 @@ public class RoleChooseHandler : MonoBehaviour
         {
             button.onClick.AddListener(delegate { SetRole(button); });
         }
-        roleChoosingUiController.confirmButton.onClick.AddListener(delegate {
+
+        roleChoosingUiController.confirmButton.onClick.AddListener(delegate
+        {
             int gId = Client.Instance.gId;
             int uId = Client.Instance.uId;
             SendConfirmMessage(gId, uId);
@@ -33,7 +34,7 @@ public class RoleChooseHandler : MonoBehaviour
             Debug.Log("确定了");
         });
     }
-    
+
     private void SendConfirmMessage(int gId, int uId)
     {
         ConfirmChooseMsg ccm = new ConfirmChooseMsg(gId, uId);
@@ -44,7 +45,7 @@ public class RoleChooseHandler : MonoBehaviour
     private void SetRole(Button selectButton)
     {
         int i;
-        for (i = 0; i < 8 && roleChoosingUiController.buttons[i] != selectButton; i++);
+        for (i = 0; i < 8 && roleChoosingUiController.buttons[i] != selectButton; i++) ;
 
         if (i == 8)
         {
@@ -59,20 +60,20 @@ public class RoleChooseHandler : MonoBehaviour
         if (networkClient == null) networkClient = Client.Instance.networkClient;
         networkClient.Send(CustomMsgType.Choose, chooseRequest);
         Debug.Log("send " + chooseRequest);
-        
+
     }
 
     public void OnReceiveRoleState(NetworkMessage netmsg)
     {
         RoleStateMsg roleStatesMsg = netmsg.ReadMessage<RoleStateMsg>();
-        
+
 //        Debug.Log("received role info " + roleStatesMsg);
         for (int i = 0; i < 8; i++)
         {
             roleChoosingUiController.SetButtonRoleAvailable(i / 2, i % 2);
         }
 
-        foreach (KeyValuePair<int,int> connection2role in roleStatesMsg.GetConnection2Role())
+        foreach (KeyValuePair<int, int> connection2role in roleStatesMsg.GetConnection2Role())
         {
             int gid = connection2role.Value / 2;
             int uid = connection2role.Value % 2;
@@ -83,22 +84,8 @@ public class RoleChooseHandler : MonoBehaviour
                 roleChoosingUiController.SetRoleSelected(Client.Instance.gId, Client.Instance.uId);
                 continue;
             }
-            
             roleChoosingUiController.SetButtonRoleUnavailable(gid, uid);
         }
-        
-    }
 
-//    public void OnReceiveChooseResult(NetworkMessage netmsg)
-//    {
-//        ChooseResultMsg result = netmsg.ReadMessage<ChooseResultMsg>();
-//        Debug.Log("received " +  result);
-//        if (result.succeed)
-//        {
-//            roleChoosingUiController.SetRoleSelected(result.gid, result.uid);
-//            Client.Instance.gId = result.gid;
-//            Client.Instance.uId = result.uid; 
-//        }
-//    }
-    
+    }
 }
