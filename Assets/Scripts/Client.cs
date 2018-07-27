@@ -9,7 +9,7 @@ public class Client : MonoBehaviour
     // 两个handler
     public RoleChooseHandler roleChooseHandler;
     public JoystickHandler joystickHandler;
-    public AdvanceControlHandler AdvanceControlHandler;
+    public AdvanceControlHandler advanceControlHandler;
     //public NetConnectMaskController netConnectionController;
     public PanelController panelChanger;
 
@@ -68,7 +68,7 @@ public class Client : MonoBehaviour
         networkClient.RegisterHandler(CustomMsgType.RoleState, roleChooseHandler.OnReceiveRoleState);
         networkClient.RegisterHandler(CustomMsgType.ClientChange, panelChanger.ChangePanel);
         networkClient.RegisterHandler(CustomMsgType.GroupState, joystickHandler.OnClientReciveMessage);
-        networkClient.RegisterHandler(CustomMsgType.AdvanceControl, AdvanceControlHandler.OnReceiveAdvanceControl);
+        networkClient.RegisterHandler(CustomMsgType.AdvanceControl, advanceControlHandler.OnReceiveAdvanceControl);
         
         panelChanger.EnableNetConnectionMaskPanel(false);
         //netConnectionController.EnableNetConnectionMaskPanel(false);
