@@ -84,6 +84,16 @@ public class RoleChoosingUIController : MonoBehaviour {
             confirmButton.GetComponent<Image>().sprite = ConfrimButtonPushed;
         }
     }
+
+    public void ResetUI()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            SetButtonRoleAvailable(i / 2, i % 2);
+        }
+
+        confirmButton.interactable = true;
+    }
     
     // 到时候在这里为 button 设置效果
     public void SetButtonRoleAvailable(int gid, int uid)
@@ -124,7 +134,6 @@ public class RoleChoosingUIController : MonoBehaviour {
     {
         Debug.Log(gid + " " + uid + " selected");
         roleSelected = true;
-        //buttons[gid*2 + uid].interactable = false;
         if (uid == 0)
         {
             spritesUI[gid].PangBackgroundImage.gameObject.SetActive(true);
@@ -133,6 +142,5 @@ public class RoleChoosingUIController : MonoBehaviour {
         {
             spritesUI[gid].PigBackgroundImage.gameObject.SetActive(true);
         }
-        buttons[gid*2 + uid].interactable = false;
     }
 }

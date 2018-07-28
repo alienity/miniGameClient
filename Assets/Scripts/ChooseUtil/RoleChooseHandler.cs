@@ -68,7 +68,7 @@ public class RoleChooseHandler : MonoBehaviour
     {
         RoleStateMsg roleStatesMsg = netmsg.ReadMessage<RoleStateMsg>();
 
-//        Debug.Log("received role info " + roleStatesMsg);
+        Debug.Log("received role info " + roleStatesMsg);
         for (int i = 0; i < 8; i++)
         {
             roleChoosingUiController.SetButtonRoleAvailable(i / 2, i % 2);
