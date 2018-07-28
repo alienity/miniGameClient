@@ -39,6 +39,8 @@ public class ReConnectHandler: MonoBehaviour
                 if (Client.Instance.sessionId == -1)
                 {
                     // Todo 询问session时如果没有属于自己的sessionID，说明玩家误入游戏房间, 要怎么告诉玩家当前不能游戏，maybe跳到一个提示界面，告玩家当前游戏不可用
+                    Debug.Log("该玩家没有sessionID，不能进行断线重连");
+                    panelController.SwitchToStage(Stage.StartStage);
                     return;
                 }
             }
@@ -68,7 +70,9 @@ public class ReConnectHandler: MonoBehaviour
                 switch ((Stage)sessionMsg.stage)
                 {
                         case Stage.ConnectToNetStage:
+                            // Todo 需要一个单独的界面显示错误信息
                             Debug.LogError("准备阶段掉线是不可能的");
+                            panelController.SwitchToStage(Stage.StartStage);
                             return;
                         case Stage.ChoosingRoleStage:
                             panelController.SwitchToStage(Stage.ChoosingRoleStage);
@@ -82,7 +86,6 @@ public class ReConnectHandler: MonoBehaviour
                             Client.Instance.uId = sessionMsg.uid;
                             panelController.SwitchToStage(Stage.GammingStage);
                             Debug.Log("received roll to gamming " + sessionMsg);
-
                             break;
                 }
             }
@@ -94,7 +97,6 @@ public class ReConnectHandler: MonoBehaviour
         Debug.Log("disconnected");
         if (Client.Instance.stage == Stage.GammingStage || Client.Instance.stage == Stage.ChoosingRoleStage)
         {
-            // todo 跳转到断线界面，并进行重连
             panelController.SwitchToStage(Stage.OfflineStage);
             StartCoroutine(TryToReConnect());
         }

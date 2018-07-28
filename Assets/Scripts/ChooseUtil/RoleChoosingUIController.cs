@@ -69,7 +69,7 @@ public class RoleChoosingUIController : MonoBehaviour {
 
     public void OnConfirm(int gid, int uid)
     {
-        if (roleSelected == true)
+        if (roleSelected)
         {
             // 在选择角色按钮上添加一层“蒙布”
             for (int i = 0; i < 4; ++i)
@@ -82,6 +82,12 @@ public class RoleChoosingUIController : MonoBehaviour {
             buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadLock : PigHeadLock;
             spritesUI[gid].StarImage.gameObject.SetActive(true);
             confirmButton.GetComponent<Image>().sprite = ConfrimButtonPushed;
+            foreach (Button button in buttons)
+            {
+                button.interactable = false;
+            }
+
+            confirmButton.interactable = true;
         }
     }
 

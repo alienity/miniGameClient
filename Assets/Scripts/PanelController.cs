@@ -63,6 +63,11 @@ public class PanelController : MonoBehaviour
 
     public void SwitchToStage(Stage stage)
     {
+        // Todo 还没有找到服务器，就不能进入游戏
+        if (stage == Stage.ConnectToNetStage && Client.ipv4 == null)
+        {
+            return;
+        }
         Client.Instance.stage = stage;
         foreach (GameObject pgo in panels)
         {
@@ -96,6 +101,7 @@ public class PanelController : MonoBehaviour
                     Client.Instance.sessionId = -1;
                     gameOverPanel.SetActive(true);
                     Client.Instance.networkClient.Disconnect();
+                    Debug.Log("deleted session");
                     break;
         }
     }
