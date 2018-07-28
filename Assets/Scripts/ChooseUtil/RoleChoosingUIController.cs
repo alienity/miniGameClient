@@ -132,7 +132,6 @@ public class RoleChoosingUIController : MonoBehaviour {
             spritesUI[gid].PigBackgroundImage.gameObject.SetActive(false);
         }
         Debug.Log(gid + " " + uid + " unavailable");
-        buttons[gid*2 + uid].interactable = false;
     }
 
     // todo 到时候在这里为 button 设置效果

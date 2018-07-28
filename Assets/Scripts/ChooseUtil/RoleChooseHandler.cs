@@ -67,18 +67,17 @@ public class RoleChooseHandler : MonoBehaviour
     public void OnReceiveRoleState(NetworkMessage netmsg)
     {
         RoleStateMsg roleStatesMsg = netmsg.ReadMessage<RoleStateMsg>();
-
         Debug.Log("received role info " + roleStatesMsg);
         for (int i = 0; i < 8; i++)
         {
             roleChoosingUiController.SetButtonRoleAvailable(i / 2, i % 2);
         }
 
-        foreach (KeyValuePair<int, int> connection2role in roleStatesMsg.GetConnection2Role())
+        foreach (KeyValuePair<int, int> session2role in roleStatesMsg.GetSessionToRole())
         {
-            int gid = connection2role.Value / 2;
-            int uid = connection2role.Value % 2;
-            if (connection2role.Key == netmsg.conn.connectionId)
+            int gid = session2role.Value / 2;
+            int uid = session2role.Value % 2;
+            if (session2role.Key == Client.Instance.sessionId)
             {
                 Client.Instance.gId = gid;
                 Client.Instance.uId = uid;
