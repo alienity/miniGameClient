@@ -145,7 +145,6 @@ public class JoystickHandler : MonoBehaviour
         jcmQueue.Clear();
         csmQueue.Clear();
         rsmQueue.Clear();
-
     }
 
 }

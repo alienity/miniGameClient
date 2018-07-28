@@ -39,26 +39,50 @@ public class PanelController : MonoBehaviour
     {
         Debug.Log("改变界面");
         SceneTransferMsg stm = netmsg.ReadMessage<SceneTransferMsg>();
-        string curSceneName = stm.curSceneName;
         string nextSceneName = stm.nextSceneName;
         Debug.Log(nextSceneName);
         // 暂时先设置成只从要转换的下一个场景读
         if(nextSceneName == "GameScene")
         {
             // 切换到游戏场景后**才**开始发送摇杆信息
-            joystickHandler.enableControl = true;
-            foreach (GameObject pgo in panels)
-            {
-                pgo.SetActive(false);
-            }
+            SwitchToStage(Stage.GammingStage);
             gamePanel.SetActive(true);
 
         }
     }
 
-    public void EnableNetConnectionMaskPanel(bool enable)
+    public void ChangeStage(NetworkMessage netmsg)
     {
-        connectingToNet.SetActive(enable);
+        StageTransferMsg stageTransferMsg = netmsg.ReadMessage<StageTransferMsg>();
+        SwitchToStage((Stage)stageTransferMsg.stage);
     }
 
+    public void SwitchToStage(Stage stage)
+    {
+        Client.Instance.stage = stage;
+        foreach (GameObject pgo in panels)
+        {
+            pgo.SetActive(false);
+        }
+
+        joystickHandler.enableControl = false;
+        switch (stage)
+        {
+                case Stage.StartStage:
+                    Client.Instance.networkClient.Disconnect();
+                    startPanel.SetActive(true);
+                    break;
+                case Stage.ConnectToNetStage:
+                    connectingToNet.SetActive(true);
+                    Client.Instance.StartClient();
+                    break;
+                case Stage.ChoosingRoleStage:
+                    roomCanvas.SetActive(true);
+                    break;
+                case Stage.GammingStage:
+                    joystickHandler.enableControl = true;
+                    gamePanel.SetActive(true);
+                    break;
+        }
+    }
 }

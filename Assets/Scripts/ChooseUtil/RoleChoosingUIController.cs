@@ -34,9 +34,7 @@ public class RoleChoosingUIController : MonoBehaviour {
 
     [HideInInspector] public Button[] buttons;
 
-    public bool roleSelected { get; private set; }
-    public int selectedGid { get; private set; }
-    public int selectedUid { get; private set; }
+    public bool roleSelected { get; private set; } 
 
     public System.Action confirmFinalAction;
 
@@ -108,7 +106,6 @@ public class RoleChoosingUIController : MonoBehaviour {
     public void SetButtonRoleUnavailable(int gid, int uid)
     {
         Debug.Log(gid + " " + uid + " selected");
-        //buttons[gid*2 + uid].interactable = false;
         buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadSelect : PigHeadSelect;
         if (uid == 0)
         {
@@ -118,14 +115,15 @@ public class RoleChoosingUIController : MonoBehaviour {
         {
             spritesUI[gid].PigBackgroundImage.gameObject.SetActive(false);
         }
+        Debug.Log(gid + " " + uid + " unavailable");
+        buttons[gid*2 + uid].interactable = false;
     }
 
     // todo 到时候在这里为 button 设置效果
     public void SetRoleSelected(int gid, int uid)
     {
+        Debug.Log(gid + " " + uid + " selected");
         roleSelected = true;
-        selectedGid = gid;
-        selectedUid = uid;
         //buttons[gid*2 + uid].interactable = false;
         if (uid == 0)
         {
@@ -135,5 +133,6 @@ public class RoleChoosingUIController : MonoBehaviour {
         {
             spritesUI[gid].PigBackgroundImage.gameObject.SetActive(true);
         }
+        buttons[gid*2 + uid].interactable = false;
     }
 }

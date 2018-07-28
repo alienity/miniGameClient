@@ -1,24 +1,22 @@
 ﻿using UnityEngine.Networking;
 
-
 public class ChooseRequestMsg : MessageBase
 {
     public int gid;
     public int uid;
-    public bool hasOld;
-    public int oldGid;
-    public int oldUid;
 
-    public ChooseRequestMsg(int gid, int uid, bool hasOld, int oldGid, int oldUid)
+    public ChooseRequestMsg(int gid, int uid)
     {
         this.gid = gid;
         this.uid = uid;
-        this.hasOld = hasOld;
-        this.oldGid = oldGid;
-        this.oldUid = oldUid;
     }
 
     public ChooseRequestMsg()
     {
+    }
+
+    public override string ToString()
+    {
+        return string.Format("Gid: {0}, Uid: {1}", gid, uid);
     }
 }
