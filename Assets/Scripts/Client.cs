@@ -35,6 +35,10 @@ public class Client : MonoBehaviour
     public int sessionId = -1;    // -1 作为空闲的sessionId
     public Stage stage = Stage.ChoosingRoleStage;
     
+    
+    // 玩家名字
+    public string playerName = null;
+    
 
     private void Awake()
     {

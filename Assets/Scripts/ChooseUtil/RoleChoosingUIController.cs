@@ -30,6 +30,18 @@ public class RoleChoosingUIController : MonoBehaviour {
         public Image StarImage;
     }
     public List<SpritesUI> spritesUI;
+    public List<Text> playerNames;
+    private List<string> defaultNames = new List<string>()
+    {
+        "唐吉诃鹅 - P1",
+        "罗齐南猪 - P1",
+        "唐吉诃鹅 - P2",
+        "罗齐南猪 - P2",
+        "唐吉诃鹅 - P3",
+        "罗齐南猪 - P3",
+        "唐吉诃鹅 - P4",
+        "罗齐南猪 - P4",
+    };
 
     public Button confirmButton;
 
@@ -66,6 +78,7 @@ public class RoleChoosingUIController : MonoBehaviour {
             buttons[2 * i].GetComponent<Image>().sprite = PenguHeadAltern;
             buttons[2 * i + 1].GetComponent<Image>().sprite = PigHeadAltern;
         }
+        
     }
 
     public void SetButtonRoleLocked(int gid, int uid)
@@ -106,11 +119,19 @@ public class RoleChoosingUIController : MonoBehaviour {
         }
         confirmButton.interactable = true;
     }
+
+    public void SetRoleNames(Dictionary<int, string> roleId2names)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            playerNames[i].text = roleId2names.ContainsKey(i) ? roleId2names[i] : defaultNames[i];
+        }
+    }
     
     // 到时候在这里为 button 设置效果
     public void SetButtonRoleAvailable(int gid, int uid)
     {
-        Debug.Log(gid+ " " + uid + " available");
+//        Debug.Log(gid+ " " + uid + " available");
         //buttons[gid*2 + uid].interactable = true;
         buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadAltern : PigHeadAltern;
         buttons[gid * 2 + uid].enabled = true;
@@ -128,7 +149,7 @@ public class RoleChoosingUIController : MonoBehaviour {
     // 到时候在这里为 button 设置效果
     public void SetButtonRoleUnavailable(int gid, int uid)
     {
-        Debug.Log(gid + " " + uid + " selected");
+//        Debug.Log(gid + " " + uid + " selected");
         buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadSelect : PigHeadSelect;
         buttons[gid * 2 + uid].enabled = false;
         if (uid == 0)
@@ -145,7 +166,7 @@ public class RoleChoosingUIController : MonoBehaviour {
     // todo 到时候在这里为 button 设置效果
     public void SetRoleSelected(int gid, int uid)
     {
-        Debug.Log(gid + " " + uid + " selected");
+//        Debug.Log(gid + " " + uid + " selected");
         roleSelected = true;
         buttons[gid * 2 + uid].enabled = false;
         if (uid == 0)

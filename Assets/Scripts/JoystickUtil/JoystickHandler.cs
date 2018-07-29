@@ -26,6 +26,11 @@ public class JoystickHandler : MonoBehaviour
 
     public bool enableControl { get; set; }
 
+    private void Start()
+    {
+        Debug.Log("JoystickHandler start");
+    }
+
     /// <summary>
     /// 为摇杆移动注册事件
     /// </summary>
