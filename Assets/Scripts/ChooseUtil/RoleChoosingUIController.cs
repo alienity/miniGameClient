@@ -113,9 +113,12 @@ public class RoleChoosingUIController : MonoBehaviour {
 
     public void ResetUI()
     {
+        Debug.Log("reset UI");
         for (int i = 0; i < 8; i++)
         {
             SetButtonRoleAvailable(i / 2, i % 2);
+            buttons[i].interactable = true;
+
         }
         confirmButton.interactable = true;
     }

@@ -103,6 +103,7 @@ public class PanelController : MonoBehaviour
                     Client.Instance.StartClient();
                     break;
                 case Stage.ChoosingRoleStage:
+                    FindObjectOfType<RoleChoosingUIController>().ResetUI();
                     roomCanvas.SetActive(true);
                     break;
                 case Stage.GammingStage:
