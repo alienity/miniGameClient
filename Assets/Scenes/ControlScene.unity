@@ -1236,7 +1236,7 @@ MonoBehaviour:
   allowSimulationStandalone: 0
   visibleOnStandalone: 1
   dPadAxisCount: 0
-  useFixedUpdate: 0
+  useFixedUpdate: 1
   isOnDrag: 0
   isSwipeIn: 0
   isSwipeOut: 0
