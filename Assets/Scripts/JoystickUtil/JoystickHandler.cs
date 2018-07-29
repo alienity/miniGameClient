@@ -24,6 +24,8 @@ public class JoystickHandler : MonoBehaviour
     private Queue<ChargeSkillMsg> csmQueue = new Queue<ChargeSkillMsg>();
     private Queue<RushSkillMag> rsmQueue = new Queue<RushSkillMag>();
 
+    private float coolingTime;
+
     public bool enableControl { get; set; }
 
     private void Start()
@@ -60,12 +62,18 @@ public class JoystickHandler : MonoBehaviour
     // 为蓄力按钮注册蓄力事件
     public void OnChargeStart()
     {
+        if (!IsSkillAvi()) return;
+
         int gId = Client.Instance.gId;
         int uId = Client.Instance.uId;
         if(uId == 0)
         {
-            Debug.Log("开始蓄力");
-            chargeStartTime = Time.time;
+            //Debug.Log("开始蓄力");
+            //if(chargeStartTime == -1)
+            //    chargeStartTime = Time.time;
+
+            //ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, chargeStartTime, false);
+            //csmQueue.Enqueue(csm);
         }
         else
         {
@@ -78,10 +86,15 @@ public class JoystickHandler : MonoBehaviour
     // 按着蓄力
     public void OnChargeNow()
     {
+        if (!IsSkillAvi()) return;
+
         int gId = Client.Instance.gId;
         int uId = Client.Instance.uId;
 
         if (uId == 1) return;
+
+        if (chargeStartTime == -1)
+            chargeStartTime = Time.time;
 
         ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, Time.time, false);
         csmQueue.Enqueue(csm);
@@ -90,14 +103,20 @@ public class JoystickHandler : MonoBehaviour
     // 结束蓄力
     public void OnChargeOver()
     {
+        if (!IsSkillAvi()) return;
+
         int gId = Client.Instance.gId;
         int uId = Client.Instance.uId;
 
         if (uId == 1) return;
 
+        Debug.Log("chargeStartTime = " + chargeStartTime);
+
         Debug.Log("结束蓄力");
-        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, Time.time, true);
+        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, -1, true);
         csmQueue.Enqueue(csm);
+
+        chargeStartTime = -1;
     }
 
     private void FixedUpdate()
@@ -132,8 +151,11 @@ public class JoystickHandler : MonoBehaviour
             eTCChargeButton.activated = true;
         else
             eTCChargeButton.activated = false;
+
+        this.coolingTime = coolingTime;
+
     }
-    
+
     // 发送摇杆数据
     public void SendUpdateJoystickAndSkillMsg()
     {
@@ -150,6 +172,12 @@ public class JoystickHandler : MonoBehaviour
         jcmQueue.Clear();
         csmQueue.Clear();
         rsmQueue.Clear();
+    }
+
+    // 通过冷却时间检查能否使用技能
+    public bool IsSkillAvi()
+    {
+        return coolingTime > 0 ? false : true;
     }
 
 }
