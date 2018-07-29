@@ -55,25 +55,33 @@ public class RoleChooseHandler : MonoBehaviour
 
         int newGid = i / 2;
         int newUid = i % 2;
-        ChooseRequestMsg chooseRequest = new ChooseRequestMsg();
-        chooseRequest.gid = newGid;
-        chooseRequest.uid = newUid;
+        ChooseRequestMsg chooseRequest = new ChooseRequestMsg(newGid, newUid, Client.Instance.playerName);
         if (networkClient == null) networkClient = Client.Instance.networkClient;
         networkClient.Send(CustomMsgType.Choose, chooseRequest);
         Debug.Log("send " + chooseRequest);
 
     }
 
+    /**
+     * 1.现将所有button置为可用
+     * 2.将玩家自己选中的角色置为selected
+     * 3.将其他玩家选中的角色置为unvailable
+     * 4.将已经被玩家确认的角色置为locked
+     * 5.更新角色名字
+     */
     public void OnReceiveRoleState(NetworkMessage netmsg)
     {
         RoleStateMsg roleStatesMsg = netmsg.ReadMessage<RoleStateMsg>();
+        var session2names = roleStatesMsg.GetSessionToName();
+        var session2roles = roleStatesMsg.GetSessionToRole();
+        var session2confirm = roleStatesMsg.GetSesssion2Confirm();
         Debug.Log("received role info " + roleStatesMsg);
         for (int i = 0; i < 8; i++)
         {
             roleChoosingUiController.SetButtonRoleAvailable(i / 2, i % 2);
         }
 
-        foreach (KeyValuePair<int, int> session2role in roleStatesMsg.GetSessionToRole())
+        foreach (KeyValuePair<int, int> session2role in session2roles)
         {
             int gid = session2role.Value / 2;
             int uid = session2role.Value % 2;
@@ -87,7 +95,7 @@ public class RoleChooseHandler : MonoBehaviour
             roleChoosingUiController.SetButtonRoleUnavailable(gid, uid);
         }
 
-        foreach (int session in roleStatesMsg.GetSesssion2Confirm())
+        foreach (int session in session2confirm)
         {
             int roleId = roleStatesMsg.GetSessionToRole()[session];
             if (session == Client.Instance.sessionId)
@@ -100,5 +108,13 @@ public class RoleChooseHandler : MonoBehaviour
             }
         }
 
+        Dictionary<int, string> role2name = new Dictionary<int, string>();
+        foreach (int sessionid in session2names.Keys)
+        {
+            string name = session2names[sessionid];
+            int role = session2roles[sessionid];
+            role2name.Add(role, name);
+        }
+        roleChoosingUiController.SetRoleNames(role2name);
     }
 }

@@ -20,7 +20,8 @@ public class PanelController : MonoBehaviour
     private List<GameObject> panels = new List<GameObject>();
     private JoystickHandler joystickHandler;
 
-    private void Start()
+
+    private void Awake()
     {
         panels.Add(preparePanel);
         panels.Add(startPanel);
@@ -29,6 +30,11 @@ public class PanelController : MonoBehaviour
         panels.Add(gameOverPanel);
         panels.Add(connectingToNet);
         panels.Add(reconnectPanel);
+    }
+
+    private void Start()
+    {
+        
         joystickHandler = FindObjectOfType<JoystickHandler>();
         Debug.Assert(joystickHandler != null);
     }
@@ -64,7 +70,7 @@ public class PanelController : MonoBehaviour
     public void SwitchToStage(Stage stage)
     {
         // Todo 还没有找到服务器，就不能进入游戏
-        if (stage == Stage.ConnectToNetStage && Client.ipv4 == null)
+        if (stage == Stage.Prepare && Client.ipv4 == null)
         {
             return;
         }
@@ -73,19 +79,31 @@ public class PanelController : MonoBehaviour
         {
             pgo.SetActive(false);
         }
+        Debug.Log("panels: " + panels.Count);
+        if (joystickHandler != null)
+        {
+            joystickHandler.enableControl = false;
+        }
+        else
+        {
+            Debug.Log("joystickHandler null");
+        }
 
-        joystickHandler.enableControl = false;
         switch (stage)
         {
                 case Stage.StartStage:
-                    Client.Instance.networkClient.Disconnect();
+                    if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
+                    {
+                        Client.Instance.networkClient.Disconnect();
+                    }
                     startPanel.SetActive(true);
                     break;
-                case Stage.ConnectToNetStage:
+                case Stage.Prepare:
                     connectingToNet.SetActive(true);
                     Client.Instance.StartClient();
                     break;
                 case Stage.ChoosingRoleStage:
+                    FindObjectOfType<RoleChoosingUIController>().ResetUI();
                     roomCanvas.SetActive(true);
                     break;
                 case Stage.GammingStage:
@@ -102,6 +120,9 @@ public class PanelController : MonoBehaviour
                     gameOverPanel.SetActive(true);
                     Client.Instance.networkClient.Disconnect();
                     Debug.Log("deleted session");
+                    break;
+                case Stage.ChangeNameStage:
+                    preparePanel.SetActive(true);
                     break;
         }
     }

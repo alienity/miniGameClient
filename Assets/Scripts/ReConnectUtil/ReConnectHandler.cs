@@ -69,7 +69,7 @@ public class ReConnectHandler: MonoBehaviour
             {
                 switch ((Stage)sessionMsg.stage)
                 {
-                        case Stage.ConnectToNetStage:
+                        case Stage.Prepare:
                             // Todo 需要一个单独的界面显示错误信息
                             Debug.LogError("准备阶段掉线是不可能的");
                             panelController.SwitchToStage(Stage.StartStage);
