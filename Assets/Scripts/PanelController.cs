@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class PanelController : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class PanelController : MonoBehaviour
     public GameObject gamePanel;
     public GameObject gameOverPanel;
     public GameObject connectingToNet;
+    public GameObject reconnectPanel;
+    public Text reconnectErrorText;
 
     public NetworkClient netClient;
 
@@ -25,6 +28,7 @@ public class PanelController : MonoBehaviour
         panels.Add(gamePanel);
         panels.Add(gameOverPanel);
         panels.Add(connectingToNet);
+        panels.Add(reconnectPanel);
         joystickHandler = FindObjectOfType<JoystickHandler>();
         Debug.Assert(joystickHandler != null);
     }
@@ -59,6 +63,11 @@ public class PanelController : MonoBehaviour
 
     public void SwitchToStage(Stage stage)
     {
+        // Todo 还没有找到服务器，就不能进入游戏
+        if (stage == Stage.ConnectToNetStage && Client.ipv4 == null)
+        {
+            return;
+        }
         Client.Instance.stage = stage;
         foreach (GameObject pgo in panels)
         {
@@ -82,6 +91,17 @@ public class PanelController : MonoBehaviour
                 case Stage.GammingStage:
                     joystickHandler.enableControl = true;
                     gamePanel.SetActive(true);
+                    break;
+                case Stage.OfflineStage:
+                    reconnectPanel.SetActive(true);
+                    break;
+                case Stage.GameOverStage:
+                    // 游戏结束时断开时断开与服务器的连接, 删除sessionid
+                    PlayerPrefs.DeleteKey(ReConnectHandler.SESSION_NAME);
+                    Client.Instance.sessionId = -1;
+                    gameOverPanel.SetActive(true);
+                    Client.Instance.networkClient.Disconnect();
+                    Debug.Log("deleted session");
                     break;
         }
     }

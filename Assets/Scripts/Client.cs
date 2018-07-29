@@ -31,6 +31,7 @@ public class Client : MonoBehaviour
     private ClientNetworkDiscovery ClientDiscovery;
 
 
+    //sessionid 用来标识一局游戏中的一个角色，每局比赛每个玩家sessionID都不同
     public int sessionId = -1;    // -1 作为空闲的sessionId
     public Stage stage = Stage.ChoosingRoleStage;
     
@@ -69,34 +70,38 @@ public class Client : MonoBehaviour
     public void StartClient()
     {
         Debug.Log("StartClient");
-        networkClient = new NetworkClient();
+        if (networkClient == null)
+        {
+            networkClient = new NetworkClient();
+            networkClient.Connect(ipv4, portTCP); // port server的端口，用于建立链接
+//            networkClient.RegisterHandler(MsgType.Connect, OnConnect);
+            networkClient.RegisterHandler(MsgType.Disconnect, reconnectHandler.OnDisconnect);
+            networkClient.RegisterHandler(CustomMsgType.RoleState, roleChooseHandler.OnReceiveRoleState);
+            networkClient.RegisterHandler(CustomMsgType.ClientChange, panelChanger.ChangePanel);
+            networkClient.RegisterHandler(CustomMsgType.GroupState, joystickHandler.OnClientReciveMessage);
+            networkClient.RegisterHandler(CustomMsgType.AdvanceControl, advanceControlHandler.OnReceiveAdvanceControl);
+            networkClient.RegisterHandler(CustomMsgType.Session, reconnectHandler.OnReceiveSession);
+            networkClient.RegisterHandler(CustomMsgType.Stage, panelChanger.ChangeStage);
+        }
+        else
+        {
+            TryConnectToGameServer();
+        }
 
-        networkClient.Connect(ipv4, portTCP); // port server的端口，用于建立链接
-//        networkClient.RegisterHandler(CustomMsgType.Choose, roleChooseHandler.OnReceiveChooseResult);
-        networkClient.RegisterHandler(MsgType.Connect, OnConnect);
-        networkClient.RegisterHandler(MsgType.Disconnect, reconnectHandler.OnDisconnect);
-        networkClient.RegisterHandler(CustomMsgType.RoleState, roleChooseHandler.OnReceiveRoleState);
-        networkClient.RegisterHandler(CustomMsgType.ClientChange, panelChanger.ChangePanel);
-        networkClient.RegisterHandler(CustomMsgType.GroupState, joystickHandler.OnClientReciveMessage);
-        
-        networkClient.RegisterHandler(CustomMsgType.AdvanceControl, advanceControlHandler.OnReceiveAdvanceControl);
-        networkClient.RegisterHandler(CustomMsgType.Session, reconnectHandler.OnReceiveSession);
-        networkClient.RegisterHandler(CustomMsgType.Stage, panelChanger.ChangeStage);
-        
     }
 
-    private void OnConnect(NetworkMessage netmsg)
+    private void TryConnectToGameServer()
     {
-        if (stage == Stage.ConnectToNetStage)
+        if (!networkClient.isConnected)
         {
-            panelChanger.SwitchToStage(Stage.ChoosingRoleStage);
+           networkClient.Connect(ipv4, portTCP);
+           Debug.Log("is connecting to game server");
+        }
+        else
+        {
+            // Todo 不能连接直接退回开始界面，后面加一个单独的显示错误的界面
+            panelChanger.SwitchToStage(Stage.StartStage);
+            Debug.LogError("not able to connect to game server");
         }
     }
-
-    // 
-    private void InitAllPanels()
-    {
-
-    }
-
 }
