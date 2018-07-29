@@ -87,5 +87,18 @@ public class RoleChooseHandler : MonoBehaviour
             roleChoosingUiController.SetButtonRoleUnavailable(gid, uid);
         }
 
+        foreach (int session in roleStatesMsg.GetSesssion2Confirm())
+        {
+            int roleId = roleStatesMsg.GetSessionToRole()[session];
+            if (session == Client.Instance.sessionId)
+            {
+                roleChoosingUiController.OnConfirm(roleId/2, roleId%2);
+            }
+            else
+            {
+                roleChoosingUiController.SetButtonRoleLocked(roleId / 2, roleId % 2);
+            }
+        }
+
     }
 }
