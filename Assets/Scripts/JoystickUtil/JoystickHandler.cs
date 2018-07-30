@@ -14,7 +14,7 @@ public class JoystickHandler : MonoBehaviour
     public ETCButton eTCChargeButton;
 
     // 开始蓄力的时间点
-    private float chargeStartTime = -1;
+    private float chargeStartTime = 0;
 
     // 网络连接
     private NetworkClient networkClient;
@@ -93,7 +93,7 @@ public class JoystickHandler : MonoBehaviour
 
         if (uId == 1) return;
 
-        if (chargeStartTime == -1)
+        if (chargeStartTime == 0)
             chargeStartTime = Time.time;
 
         ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, Time.time, false);
@@ -113,7 +113,7 @@ public class JoystickHandler : MonoBehaviour
         Debug.Log("chargeStartTime = " + chargeStartTime);
 
         Debug.Log("结束蓄力");
-        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, -1, true);
+        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, 0, true);
         csmQueue.Enqueue(csm);
 
         chargeStartTime = -1;
@@ -147,10 +147,10 @@ public class JoystickHandler : MonoBehaviour
         else
             eTCJoystick.activated = false;
 
-        if (coolingTime <= 0)
-            eTCChargeButton.activated = true;
-        else
-            eTCChargeButton.activated = false;
+        //if (coolingTime <= 0)
+        //    eTCChargeButton.activated = true;
+        //else
+        //    eTCChargeButton.activated = false;
 
         this.coolingTime = coolingTime;
 
