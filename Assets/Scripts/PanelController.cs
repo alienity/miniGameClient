@@ -19,6 +19,7 @@ public class PanelController : MonoBehaviour
 
     private List<GameObject> panels = new List<GameObject>();
     private JoystickHandler joystickHandler;
+    private RoleChoosingUIController roleChoosingUIController;
 
 
     private void Awake()
@@ -36,6 +37,7 @@ public class PanelController : MonoBehaviour
     {
         
         joystickHandler = FindObjectOfType<JoystickHandler>();
+        roleChoosingUIController = FindObjectOfType<RoleChoosingUIController>();
         Debug.Assert(joystickHandler != null);
     }
     
@@ -69,12 +71,11 @@ public class PanelController : MonoBehaviour
 
     public void SwitchToStage(Stage stage)
     {
-        // Todo 还没有找到服务器，就不能进入游戏
-        if (stage == Stage.Prepare && Client.ipv4 == null)
+        // Todo 还没有找到服务器，就不能进入游戏   Client.Instance.networkClient.isConnected的判断是游戏结束后重新x
+        if (stage == Stage.Prepare && Client.ipv4 == null && Client.Instance.networkClient.isConnected)
         {
             return;
         }
-        Client.Instance.stage = stage;
         foreach (GameObject pgo in panels)
         {
             pgo.SetActive(false);
@@ -87,6 +88,11 @@ public class PanelController : MonoBehaviour
         else
         {
             Debug.Log("joystickHandler null");
+        }
+
+        if (roleChoosingUIController != null)
+        {
+            roleChoosingUIController.ResetUI();
         }
 
         switch (stage)
@@ -125,5 +131,7 @@ public class PanelController : MonoBehaviour
                     preparePanel.SetActive(true);
                     break;
         }
+        Client.Instance.stage = stage;
     }
+    
 }

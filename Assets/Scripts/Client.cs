@@ -73,12 +73,12 @@ public class Client : MonoBehaviour
 
     public void StartClient()
     {
-        Debug.Log("StartClient");
         if (networkClient == null)
         {
+            Debug.Log("StartClient");
             networkClient = new NetworkClient();
             networkClient.Connect(ipv4, portTCP); // port server的端口，用于建立链接
-//            networkClient.RegisterHandler(MsgType.Connect, OnConnect);
+            networkClient.RegisterHandler(MsgType.Connect, OnConnect);
             networkClient.RegisterHandler(MsgType.Disconnect, reconnectHandler.OnDisconnect);
             networkClient.RegisterHandler(CustomMsgType.RoleState, roleChooseHandler.OnReceiveRoleState);
             networkClient.RegisterHandler(CustomMsgType.ClientChange, panelChanger.ChangePanel);
@@ -91,21 +91,19 @@ public class Client : MonoBehaviour
         {
             TryConnectToGameServer();
         }
-
     }
 
-    private void TryConnectToGameServer()
+    private void OnConnect(NetworkMessage netmsg)
+    {
+        Debug.Log("client connected");
+    }
+
+    public void TryConnectToGameServer()
     {
         if (!networkClient.isConnected)
         {
            networkClient.Connect(ipv4, portTCP);
            Debug.Log("is connecting to game server");
-        }
-        else
-        {
-            // Todo 不能连接直接退回开始界面，后面加一个单独的显示错误的界面
-            panelChanger.SwitchToStage(Stage.StartStage);
-            Debug.LogError("not able to connect to game server");
         }
     }
 }

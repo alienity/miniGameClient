@@ -14,6 +14,5 @@ public class PrepareButtonOnclick : MonoBehaviour
 		Button prepareButton = GetComponent<Button>();
 		// 进入等待连接的界面
 		prepareButton.onClick.AddListener(delegate { panelController.SwitchToStage(Stage.Prepare); });
-
 	}	
 }

@@ -117,7 +117,8 @@ public class RoleChoosingUIController : MonoBehaviour {
         for (int i = 0; i < 8; i++)
         {
             SetButtonRoleAvailable(i / 2, i % 2);
-            buttons[i].interactable = true;
+//            buttons[i].enabled = true;
+//            buttons[i].interactable = true;
 
         }
         confirmButton.interactable = true;
@@ -137,7 +138,7 @@ public class RoleChoosingUIController : MonoBehaviour {
 //        Debug.Log(gid+ " " + uid + " available");
         //buttons[gid*2 + uid].interactable = true;
         buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadAltern : PigHeadAltern;
-        buttons[gid * 2 + uid].enabled = true;
+        buttons[gid * 2 + uid].interactable = true;
         if (uid == 0)
         {
             spritesUI[gid].PangBackgroundImage.gameObject.SetActive(false);
@@ -154,7 +155,7 @@ public class RoleChoosingUIController : MonoBehaviour {
     {
 //        Debug.Log(gid + " " + uid + " selected");
         buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadSelect : PigHeadSelect;
-        buttons[gid * 2 + uid].enabled = false;
+        buttons[gid * 2 + uid].interactable = false;
         if (uid == 0)
         {
             spritesUI[gid].PangBackgroundImage.gameObject.SetActive(false);
@@ -163,7 +164,7 @@ public class RoleChoosingUIController : MonoBehaviour {
         {
             spritesUI[gid].PigBackgroundImage.gameObject.SetActive(false);
         }
-        Debug.Log(gid + " " + uid + " unavailable");
+//        Debug.Log(gid + " " + uid + " unavailable");
     }
 
     // todo 到时候在这里为 button 设置效果
@@ -171,7 +172,7 @@ public class RoleChoosingUIController : MonoBehaviour {
     {
 //        Debug.Log(gid + " " + uid + " selected");
         roleSelected = true;
-        buttons[gid * 2 + uid].enabled = false;
+        buttons[gid * 2 + uid].interactable = false;
         if (uid == 0)
         {
             spritesUI[gid].PangBackgroundImage.gameObject.SetActive(true);

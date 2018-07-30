@@ -69,13 +69,9 @@ public class RoleChooseHandler : MonoBehaviour
      * 4.将已经被玩家确认的角色置为locked
      * 5.更新角色名字
      */
-    public void OnReceiveRoleState(NetworkMessage netmsg)
+    public void SetButtonStates(Dictionary<int, string> session2names, Dictionary<int, int> session2roles,
+        HashSet<int> session2confirm)
     {
-        RoleStateMsg roleStatesMsg = netmsg.ReadMessage<RoleStateMsg>();
-        var session2names = roleStatesMsg.GetSessionToName();
-        var session2roles = roleStatesMsg.GetSessionToRole();
-        var session2confirm = roleStatesMsg.GetSesssion2Confirm();
-        Debug.Log("received role info " + roleStatesMsg);
         for (int i = 0; i < 8; i++)
         {
             roleChoosingUiController.SetButtonRoleAvailable(i / 2, i % 2);
@@ -97,7 +93,7 @@ public class RoleChooseHandler : MonoBehaviour
 
         foreach (int session in session2confirm)
         {
-            int roleId = roleStatesMsg.GetSessionToRole()[session];
+            int roleId = session2roles[session];
             if (session == Client.Instance.sessionId)
             {
                 roleChoosingUiController.OnConfirm(roleId/2, roleId%2);
@@ -116,5 +112,16 @@ public class RoleChooseHandler : MonoBehaviour
             role2name.Add(role, name);
         }
         roleChoosingUiController.SetRoleNames(role2name);
+    }
+    
+    
+    public void OnReceiveRoleState(NetworkMessage netmsg)
+    {
+        RoleStateMsg roleStatesMsg = netmsg.ReadMessage<RoleStateMsg>();
+        var session2names = roleStatesMsg.GetSessionToName();
+        var session2roles = roleStatesMsg.GetSessionToRole();
+        var session2confirm = roleStatesMsg.GetSesssion2Confirm();
+        SetButtonStates(session2names, session2roles, session2confirm);
+        
     }
 }

@@ -8,6 +8,8 @@ public class ReConnectHandler: MonoBehaviour
 {
     private PanelController panelController;
     private RoleChoosingUIController roleChoosingUiController;
+    private RoleChooseHandler roleChooseHandler;
+
     private int curReconnectTimes;
     public int maxReconnectTimes = 10; // 最大的尝试重连次数
     public float waitTimePerTry = 10; // 每次重连尝试间的间隔时间
@@ -21,6 +23,8 @@ public class ReConnectHandler: MonoBehaviour
             panelController = FindObjectOfType<PanelController>();
         if (roleChoosingUiController == null)
             roleChoosingUiController = FindObjectOfType<RoleChoosingUIController>();
+        if (roleChooseHandler == null)
+            roleChooseHandler = FindObjectOfType<RoleChooseHandler>();
     }
     
     public void OnReceiveSession(NetworkMessage netmsg)
@@ -44,7 +48,7 @@ public class ReConnectHandler: MonoBehaviour
                     return;
                 }
             }
-            SessionMsg responSessionMsg = new SessionMsg(false, true, Client.Instance.sessionId, Client.Instance.stage, false, 0, 0, false, null);
+            SessionMsg responSessionMsg = new SessionMsg(false, true, Client.Instance.sessionId, Client.Instance.stage, false, 0, 0, null, null, null);
             Client.Instance.networkClient.Send(CustomMsgType.Session, responSessionMsg);
             Debug.Log("reply with sessionId " + responSessionMsg);
 
@@ -63,7 +67,7 @@ public class ReConnectHandler: MonoBehaviour
                 roleChoosingUiController.ResetUI();
             }
             /*
-            * 接收来自服务器的恢复信息
+            * 接收来自服务器的恢复信息，这里才是真正断线重连的逻辑
             */
             else
             {
@@ -71,14 +75,15 @@ public class ReConnectHandler: MonoBehaviour
                 {
                         case Stage.Prepare:
                             // Todo 需要一个单独的界面显示错误信息
-                            Debug.LogError("准备阶段掉线是不可能的");
+                            Debug.LogError("不应该在准备时掉线");
                             panelController.SwitchToStage(Stage.StartStage);
                             return;
                         case Stage.ChoosingRoleStage:
                             panelController.SwitchToStage(Stage.ChoosingRoleStage);
-                            bool confirmed = sessionMsg.confirmed;
-                            Dictionary<int, int> cur_session2role = sessionMsg.GetSession2Role();
-                            UpdateChoosingUI(cur_session2role, confirmed);
+                            var cur_session2role = sessionMsg.GetSession2Role();
+                            var cur_confirmed = sessionMsg.GetSession2Confirm();
+                            var cur_session2name = sessionMsg.GetSessionToName();
+                            roleChooseHandler.SetButtonStates(cur_session2name, cur_session2role, cur_confirmed);
                             Debug.Log("received roll to choosing " + sessionMsg);
                             break;
                         case Stage.GammingStage:
@@ -95,7 +100,7 @@ public class ReConnectHandler: MonoBehaviour
     public void OnDisconnect(NetworkMessage netmsg)
     {
         Debug.Log("disconnected");
-        if (Client.Instance.stage == Stage.GammingStage || Client.Instance.stage == Stage.ChoosingRoleStage)
+        if (Client.Instance.stage == Stage.GammingStage || Client.Instance.stage == Stage.ChoosingRoleStage || Client.Instance.stage == Stage.Prepare)
         {
             panelController.SwitchToStage(Stage.OfflineStage);
             StartCoroutine(TryToReConnect());
@@ -125,31 +130,5 @@ public class ReConnectHandler: MonoBehaviour
         curReconnectTimes = 0;
     }
 
-    private void UpdateChoosingUI(Dictionary<int, int> session2roles, bool confirmed)
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            roleChoosingUiController.SetButtonRoleAvailable(i / 2, i % 2);
-        }
-
-        foreach (KeyValuePair<int, int> session2role in session2roles)
-        {
-            int gid = session2role.Value / 2;
-            int uid = session2role.Value % 2;
-            if (session2role.Key == Client.Instance.sessionId)
-            {
-                Client.Instance.gId = gid;
-                Client.Instance.uId = uid;
-                roleChoosingUiController.SetRoleSelected(Client.Instance.gId, Client.Instance.uId);
-                continue;
-            }
-            roleChoosingUiController.SetButtonRoleUnavailable(gid, uid);
-        }
-
-        if (confirmed)
-        {
-            roleChoosingUiController.OnConfirm(Client.Instance.gId, Client.Instance.uId);
-        }
-    }
-    
+  
 }
