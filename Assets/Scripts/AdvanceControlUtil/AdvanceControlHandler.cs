@@ -11,12 +11,15 @@ public class AdvanceControlHandler: MonoBehaviour
      */
     public void OnReceiveAdvanceControl(NetworkMessage netmsg)
     {
+#if UNITY_ANDROID
         AdvanceControlMsg advanceControlMsg = netmsg.ReadMessage<AdvanceControlMsg>();
         switch (advanceControlMsg.type)
         {
                 case AdvanceControlType.Viberate:
                     Handheld.Vibrate();
-                    break;
+                Debug.Log("接收到振动");
+                break;
         }
+#endif
     }
 }

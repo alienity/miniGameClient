@@ -6,13 +6,15 @@ using UnityEngine.UI;
 public class RoleChooseHandler : MonoBehaviour
 {
     private RoleChoosingUIController roleChoosingUiController;
-
+    private GamePanelUIController gamePanelUIController;
     private NetworkClient networkClient;
 
     private void Start()
     {
         if (roleChoosingUiController == null)
             roleChoosingUiController = FindObjectOfType<RoleChoosingUIController>();
+        if (gamePanelUIController == null)
+            gamePanelUIController = FindObjectOfType<GamePanelUIController>();
         Debug.Assert(roleChoosingUiController != null);
         InitAllButtons();
     }
@@ -32,6 +34,7 @@ public class RoleChooseHandler : MonoBehaviour
             int uId = Client.Instance.uId;
             SendConfirmMessage(gId, uId);
             roleChoosingUiController.OnConfirm(gId, uId);
+            gamePanelUIController.showIconeAndName(gId, uId, Client.Instance.playerName);
             Debug.Log("确定了");
         });
     }

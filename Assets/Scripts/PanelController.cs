@@ -8,6 +8,7 @@ public class PanelController : MonoBehaviour
 
     public GameObject preparePanel;
     public GameObject startPanel;
+    public GameObject producerListPanel;
     public GameObject roomCanvas;
     public GameObject gamePanel;
     public GameObject gameOverPanel;
@@ -26,6 +27,7 @@ public class PanelController : MonoBehaviour
     {
         panels.Add(preparePanel);
         panels.Add(startPanel);
+        panels.Add(producerListPanel);
         panels.Add(roomCanvas);
         panels.Add(gamePanel);
         panels.Add(gameOverPanel);
@@ -97,39 +99,43 @@ public class PanelController : MonoBehaviour
 
         switch (stage)
         {
-                case Stage.StartStage:
-                    if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
-                    {
-                        Client.Instance.networkClient.Disconnect();
-                    }
-                    startPanel.SetActive(true);
-                    break;
-                case Stage.Prepare:
-                    connectingToNet.SetActive(true);
-                    Client.Instance.StartClient();
-                    break;
-                case Stage.ChoosingRoleStage:
-                    FindObjectOfType<RoleChoosingUIController>().ResetUI();
-                    roomCanvas.SetActive(true);
-                    break;
-                case Stage.GammingStage:
-                    joystickHandler.enableControl = true;
-                    gamePanel.SetActive(true);
-                    break;
-                case Stage.OfflineStage:
-                    reconnectPanel.SetActive(true);
-                    break;
-                case Stage.GameOverStage:
-                    // 游戏结束时断开时断开与服务器的连接, 删除sessionid
-                    PlayerPrefs.DeleteKey(ReConnectHandler.SESSION_NAME);
-                    Client.Instance.sessionId = -1;
-                    gameOverPanel.SetActive(true);
+            case Stage.StartStage:
+                if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
+                {
                     Client.Instance.networkClient.Disconnect();
-                    Debug.Log("deleted session");
-                    break;
-                case Stage.ChangeNameStage:
-                    preparePanel.SetActive(true);
-                    break;
+                }
+                startPanel.SetActive(true);
+                break;
+            case Stage.Prepare:
+                connectingToNet.SetActive(true);
+                Client.Instance.StartClient();
+                break;
+            case Stage.ProducerListStage:
+                startPanel.SetActive(false);
+                producerListPanel.SetActive(true);
+                break;
+            case Stage.ChoosingRoleStage:
+                FindObjectOfType<RoleChoosingUIController>().ResetUI();
+                roomCanvas.SetActive(true);
+                break;
+            case Stage.GammingStage:
+                joystickHandler.enableControl = true;
+                gamePanel.SetActive(true);
+                break;
+            case Stage.OfflineStage:
+                reconnectPanel.SetActive(true);
+                break;
+            case Stage.GameOverStage:
+                // 游戏结束时断开时断开与服务器的连接, 删除sessionid
+                PlayerPrefs.DeleteKey(ReConnectHandler.SESSION_NAME);
+                Client.Instance.sessionId = -1;
+                gameOverPanel.SetActive(true);
+                Client.Instance.networkClient.Disconnect();
+                Debug.Log("deleted session");
+                break;
+            case Stage.ChangeNameStage:
+                preparePanel.SetActive(true);
+                break;
         }
         Client.Instance.stage = stage;
     }

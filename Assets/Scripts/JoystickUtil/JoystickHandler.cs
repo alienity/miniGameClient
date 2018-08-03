@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class JoystickHandler : MonoBehaviour
 {
-
+    private GamePanelUIController gamePanelUIController;
     // 现在不需要JoystickController，使用EasyTouch插件，完成摇杆和技能的操控
 
     // 摇杆对象
@@ -30,6 +30,8 @@ public class JoystickHandler : MonoBehaviour
 
     private void Start()
     {
+        if (gamePanelUIController == null)
+            gamePanelUIController = FindObjectOfType<GamePanelUIController>();
         Debug.Log("JoystickHandler start");
     }
 
@@ -62,7 +64,7 @@ public class JoystickHandler : MonoBehaviour
     // 为蓄力按钮注册蓄力事件
     public void OnChargeStart()
     {
-        if (!IsSkillAvi()) return;
+        //if (!IsSkillAvi()) return;
 
         int gId = Client.Instance.gId;
         int uId = Client.Instance.uId;
@@ -86,7 +88,7 @@ public class JoystickHandler : MonoBehaviour
     // 按着蓄力
     public void OnChargeNow()
     {
-        if (!IsSkillAvi()) return;
+        //if (!IsSkillAvi()) return;
 
         int gId = Client.Instance.gId;
         int uId = Client.Instance.uId;
@@ -96,27 +98,26 @@ public class JoystickHandler : MonoBehaviour
         if (chargeStartTime == 0)
             chargeStartTime = Time.time;
 
-        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, Time.time, false);
+        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 0);
         csmQueue.Enqueue(csm);
     }
 
     // 结束蓄力
     public void OnChargeOver()
     {
-        if (!IsSkillAvi()) return;
+        //if (!IsSkillAvi()) return;
 
         int gId = Client.Instance.gId;
         int uId = Client.Instance.uId;
 
         if (uId == 1) return;
-
-        Debug.Log("chargeStartTime = " + chargeStartTime);
-
+        
         Debug.Log("结束蓄力");
-        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, 0, true);
+        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 1);
+        //new ChargeSkillMsg(gId, uId, chargeStartTime, 0, true);
         csmQueue.Enqueue(csm);
 
-        chargeStartTime = -1;
+        chargeStartTime = 0;
     }
 
     private void FixedUpdate()
@@ -141,6 +142,7 @@ public class JoystickHandler : MonoBehaviour
 
         bool gamePanelAvi = msg.joystickAvailable;
         float coolingTime = msg.coolingTime;
+        float totalCoolingTime = msg.totalCoolingTime;
 
         if (gamePanelAvi)
             eTCJoystick.activated = true;
@@ -151,7 +153,7 @@ public class JoystickHandler : MonoBehaviour
         //    eTCChargeButton.activated = true;
         //else
         //    eTCChargeButton.activated = false;
-
+        gamePanelUIController.showCoolingTimeAndICone(coolingTime, totalCoolingTime);
         this.coolingTime = coolingTime;
 
     }

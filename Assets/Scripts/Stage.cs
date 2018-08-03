@@ -6,5 +6,6 @@
      GammingStage,
      OfflineStage,    //客户端掉线界面
      GameOverStage,
-     ChangeNameStage
- }
+     ChangeNameStage,
+     ProducerListStage
+}
