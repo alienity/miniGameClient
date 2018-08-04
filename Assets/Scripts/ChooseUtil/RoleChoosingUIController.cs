@@ -108,6 +108,8 @@ public class RoleChoosingUIController : MonoBehaviour {
             }
 
             confirmButton.interactable = false;
+            // 重置判断
+            roleSelected = false;
         }
     }
 

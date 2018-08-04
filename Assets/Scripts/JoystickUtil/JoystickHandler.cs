@@ -2,6 +2,9 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using UnityEngine.Experimental.PlayerLoop;
+using UnityEngine.UI;
 
 public class JoystickHandler : MonoBehaviour
 {
@@ -10,6 +13,12 @@ public class JoystickHandler : MonoBehaviour
 
     // 摇杆对象
     public ETCJoystick eTCJoystick;
+
+    public ETCTouchPad eTCTouchPad;
+    public Image touchStartImg;
+    public Image touchEndImg;
+
+    private Vector2 curOffset = Vector2.zero;
     // 蓄力对象
     public ETCButton eTCChargeButton;
 
@@ -26,13 +35,24 @@ public class JoystickHandler : MonoBehaviour
 
     private float coolingTime;
 
-    public bool enableControl { get; set; }
+    public bool enableControl;
 
     private void Start()
     {
         if (gamePanelUIController == null)
             gamePanelUIController = FindObjectOfType<GamePanelUIController>();
         Debug.Log("JoystickHandler start");
+        
+        eTCChargeButton.onDown.AddListener(OnDown);
+        
+        eTCTouchPad.onTouchStart.AddListener(OnChargeStartTouchPad);
+        eTCTouchPad.onMoveSpeed.AddListener(OnChargeNowTouchPad);
+        eTCTouchPad.onTouchUp.AddListener(OnChargeOverTouchPad);
+        touchStartImg.raycastTarget = false;
+        touchEndImg.raycastTarget = false;
+        touchStartImg.enabled = false;
+        touchEndImg.enabled = false;
+
     }
 
     /// <summary>
@@ -62,63 +82,109 @@ public class JoystickHandler : MonoBehaviour
     /// 手机端强行结束蓄力
     /// </summary>
     // 为蓄力按钮注册蓄力事件
-    public void OnChargeStart()
+    public void OnDown()
     {
-        //if (!IsSkillAvi()) return;
 
         int gId = Client.Instance.gId;
         int uId = Client.Instance.uId;
-        if(uId == 0)
-        {
-            //Debug.Log("开始蓄力");
-            //if(chargeStartTime == -1)
-            //    chargeStartTime = Time.time;
-
-            //ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime, chargeStartTime, false);
-            //csmQueue.Enqueue(csm);
-        }
-        else
-        {
-            Debug.Log("猪发动技能");
-            RushSkillMag rsm = new RushSkillMag(gId, uId, true);
-            rsmQueue.Enqueue(rsm);
-        }
+        Debug.Log("猪发动技能");
+        RushSkillMag rsm = new RushSkillMag(gId, uId, true);
+        rsmQueue.Enqueue(rsm);
     }
 
     // 按着蓄力
-    public void OnChargeNow()
+//    public void OnChargeNow()
+//    {
+//        //if (!IsSkillAvi()) return;
+//
+//        int gId = Client.Instance.gId;
+//        int uId = Client.Instance.uId;
+//
+//        if (uId == 1) return;
+//
+//        if (chargeStartTime == 0)
+//            chargeStartTime = Time.time;
+//
+//        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 0);
+//        csmQueue.Enqueue(csm);
+//    }
+
+    public void OnChargeStartTouchPad()
     {
-        //if (!IsSkillAvi()) return;
-
-        int gId = Client.Instance.gId;
-        int uId = Client.Instance.uId;
-
-        if (uId == 1) return;
-
-        if (chargeStartTime == 0)
-            chargeStartTime = Time.time;
-
-        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 0);
-        csmQueue.Enqueue(csm);
-    }
-
-    // 结束蓄力
-    public void OnChargeOver()
-    {
-        //if (!IsSkillAvi()) return;
-
-        int gId = Client.Instance.gId;
-        int uId = Client.Instance.uId;
-
-        if (uId == 1) return;
+        curOffset = Vector2.zero;
+        chargeStartTime = Time.time;
         
-        Debug.Log("结束蓄力");
-        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 1);
-        //new ChargeSkillMsg(gId, uId, chargeStartTime, 0, true);
-        csmQueue.Enqueue(csm);
+        // 显示起始按钮
+        if (Input.touchSupported)
+        {
+            Touch touch = Input.GetTouch(0);
+            Debug.Log("torch postion: " + touch.position);
+            touchStartImg.GetComponent<Transform>().position = touch.position;
+            touchEndImg.GetComponent<Transform>().position = touch.position;
+        }
+        else
+        {
+            touchStartImg.GetComponent<Transform>().position = Input.mousePosition;
+            touchEndImg.GetComponent<Transform>().position = Input.mousePosition;
+        }
 
-        chargeStartTime = 0;
+        touchStartImg.enabled = true;
+        touchEndImg.enabled = true;
+
     }
+
+    
+    public void OnChargeNowTouchPad(Vector2 speed)
+    {
+        curOffset.x += speed.x * Time.fixedDeltaTime;
+        curOffset.y += speed.y * Time.fixedDeltaTime;
+        JoystickMsg jsm = new JoystickMsg(Client.Instance.gId, Client.Instance.uId, curOffset);
+        jcmQueue.Enqueue(jsm);
+        
+        
+        // 显示手指当前位置
+        if (Input.touchSupported)
+        {
+            Touch touch = Input.GetTouch(0);
+            Debug.Log("torch postion: " + touch.position);
+            touchEndImg.GetComponent<Transform>().position = touch.position;
+        }
+        else
+        {
+            touchEndImg.GetComponent<Transform>().position = Input.mousePosition;
+
+        }
+
+    }
+
+    public void OnChargeOverTouchPad()
+    {
+        ChargeSkillMsg csm = new ChargeSkillMsg(Client.Instance.gId, Client.Instance.uId, chargeStartTime.ToString(), Time.time, 1);
+        //new ChargeSkillMsg(gId, uId, chargeStartTime, 0, true);
+        Debug.Log("OnChargeOverTouchPad 结束蓄力: " + csm);
+
+        csmQueue.Enqueue(csm);
+        touchStartImg.enabled = false;
+        touchEndImg.enabled = false;
+    }
+
+//    // 结束蓄力
+//    public void OnChargeOver()
+//    {
+//        //if (!IsSkillAvi()) return;
+//
+//        int gId = Client.Instance.gId;
+//        int uId = Client.Instance.uId;
+//
+//        if (uId == 1) return;
+//        
+//        Debug.Log("结束蓄力");
+//        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 1);
+//        //new ChargeSkillMsg(gId, uId, chargeStartTime, 0, true);
+//        csmQueue.Enqueue(csm);
+//
+//        chargeStartTime = 0;
+//    }
 
     private void FixedUpdate()
     {
@@ -128,8 +194,14 @@ public class JoystickHandler : MonoBehaviour
                 networkClient = Client.Instance.networkClient;
         }
 
-        if (networkClient != null && networkClient.isConnected)
+        if (enableControl && networkClient != null && networkClient.isConnected)
         {
+            if (touchStartImg.isActiveAndEnabled)
+            {
+                ChargeSkillMsg csm = new ChargeSkillMsg(Client.Instance.gId, Client.Instance.uId, chargeStartTime.ToString(), Time.time, 0);
+                Debug.Log("OnCharge " + csm);
+                csmQueue.Enqueue(csm);
+            }
             SendUpdateJoystickAndSkillMsg();
         }
         

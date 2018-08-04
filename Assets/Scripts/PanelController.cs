@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class PanelController : MonoBehaviour
 {
-
     public GameObject preparePanel;
     public GameObject startPanel;
     public GameObject producerListPanel;
     public GameObject roomCanvas;
     public GameObject gamePanel;
+    public GameObject penguTouchPadPanel;
     public GameObject gameOverPanel;
     public GameObject connectingToNet;
     public GameObject reconnectPanel;
@@ -30,6 +30,7 @@ public class PanelController : MonoBehaviour
         panels.Add(producerListPanel);
         panels.Add(roomCanvas);
         panels.Add(gamePanel);
+        panels.Add(penguTouchPadPanel);
         panels.Add(gameOverPanel);
         panels.Add(connectingToNet);
         panels.Add(reconnectPanel);
@@ -37,16 +38,15 @@ public class PanelController : MonoBehaviour
 
     private void Start()
     {
-        
         joystickHandler = FindObjectOfType<JoystickHandler>();
         roleChoosingUIController = FindObjectOfType<RoleChoosingUIController>();
         Debug.Assert(joystickHandler != null);
+        SwitchToStage(Stage.StartStage);
     }
-    
+
     // 手动切换界面
     public void ChangePanelByHand()
     {
-
     }
 
     public void ChangePanel(NetworkMessage netmsg)
@@ -56,33 +56,70 @@ public class PanelController : MonoBehaviour
         string nextSceneName = stm.nextSceneName;
         Debug.Log(nextSceneName);
         // 暂时先设置成只从要转换的下一个场景读
-        if(nextSceneName == "GameScene")
+        if (nextSceneName == "GameScene")
         {
             // 切换到游戏场景后**才**开始发送摇杆信息
-            SwitchToStage(Stage.GammingStage);
-            gamePanel.SetActive(true);
-
+            SwitchToStageUI(Stage.GammingStage);
         }
     }
 
     public void ChangeStage(NetworkMessage netmsg)
     {
         StageTransferMsg stageTransferMsg = netmsg.ReadMessage<StageTransferMsg>();
-        SwitchToStage((Stage)stageTransferMsg.stage);
+        SwitchToStage((Stage) stageTransferMsg.stage);
     }
 
     public void SwitchToStage(Stage stage)
     {
-        // Todo 还没有找到服务器，就不能进入游戏   Client.Instance.networkClient.isConnected的判断是游戏结束后重新x
+        switch (stage)
+        {
+            case Stage.StartStage:
+                if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
+                {
+                    Client.Instance.networkClient.Disconnect();
+                }
+
+                break;
+            case Stage.Prepare:
+                Client.Instance.StartClient();
+                break;
+            case Stage.ChoosingRoleStage:
+                break;
+            case Stage.GammingStage:
+                break;
+            case Stage.OfflineStage:
+                break;
+            case Stage.GameOverStage:
+                // 游戏结束时断开时断开与服务器的连接, 删除sessionid
+                PlayerPrefs.DeleteKey(ReConnectHandler.SESSION_NAME);
+                Client.Instance.sessionId = -1;
+                Client.Instance.networkClient.Disconnect();
+                Debug.Log("deleted session");
+                break;
+            case Stage.ChangeNameStage:
+                preparePanel.SetActive(true);
+                break;
+        }
+
+        SwitchToStageUI(stage);
+    }
+
+    /*
+     * SwitchToStageUI 只负责UI的变化
+     */
+    public void SwitchToStageUI(Stage stage)
+    {
+        // Todo 还没有找到服务器，就不能进入游戏   Client.Instance.networkClient.isConnected的判断是游戏结束后重新
         if (stage == Stage.Prepare && Client.ipv4 == null && Client.Instance.networkClient.isConnected)
         {
             return;
         }
+
         foreach (GameObject pgo in panels)
         {
             pgo.SetActive(false);
         }
-        Debug.Log("panels: " + panels.Count);
+
         if (joystickHandler != null)
         {
             joystickHandler.enableControl = false;
@@ -100,19 +137,11 @@ public class PanelController : MonoBehaviour
         switch (stage)
         {
             case Stage.StartStage:
-                if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
-                {
-                    Client.Instance.networkClient.Disconnect();
-                }
                 startPanel.SetActive(true);
                 break;
             case Stage.Prepare:
                 connectingToNet.SetActive(true);
                 Client.Instance.StartClient();
-                break;
-            case Stage.ProducerListStage:
-                startPanel.SetActive(false);
-                producerListPanel.SetActive(true);
                 break;
             case Stage.ChoosingRoleStage:
                 FindObjectOfType<RoleChoosingUIController>().ResetUI();
@@ -120,24 +149,34 @@ public class PanelController : MonoBehaviour
                 break;
             case Stage.GammingStage:
                 joystickHandler.enableControl = true;
-                gamePanel.SetActive(true);
+                if (Client.Instance.uId == 0)
+                {
+                    penguTouchPadPanel.SetActive(true);
+                    Debug.Log("switch to penguin panel");
+                }
+                else
+                {
+                    gamePanel.SetActive(true);
+                    Debug.Log("switch to pig panel"    );
+
+                }
+
+                break;
+            case Stage.ProducerListStage:
+                producerListPanel.SetActive(true);
                 break;
             case Stage.OfflineStage:
                 reconnectPanel.SetActive(true);
                 break;
             case Stage.GameOverStage:
                 // 游戏结束时断开时断开与服务器的连接, 删除sessionid
-                PlayerPrefs.DeleteKey(ReConnectHandler.SESSION_NAME);
-                Client.Instance.sessionId = -1;
                 gameOverPanel.SetActive(true);
-                Client.Instance.networkClient.Disconnect();
-                Debug.Log("deleted session");
                 break;
             case Stage.ChangeNameStage:
                 preparePanel.SetActive(true);
                 break;
         }
+
         Client.Instance.stage = stage;
     }
-    
 }

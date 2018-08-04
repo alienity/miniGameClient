@@ -11,7 +11,11 @@ public class BackToStartOnclick : MonoBehaviour
 	void Start () {
 		panelController = FindObjectOfType<PanelController>();
 		Button prepareButton = GetComponent<Button>();
-		prepareButton.onClick.AddListener(delegate { panelController.SwitchToStage(Stage.StartStage); });
+		prepareButton.onClick.AddListener(delegate
+		{
+			Client.Instance.networkClient.Disconnect();
+			panelController.SwitchToStageUI(Stage.StartStage);
+		});
 	}
 	
 	// Update is called once per frame

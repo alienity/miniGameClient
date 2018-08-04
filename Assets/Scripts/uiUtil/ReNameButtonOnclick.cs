@@ -9,7 +9,7 @@
          panelController = FindObjectOfType<PanelController>();
          GetComponent<Button>().onClick.AddListener(delegate
          {
-             panelController.SwitchToStage(Stage.ChangeNameStage);
+             panelController.SwitchToStageUI(Stage.ChangeNameStage);
          });
      }
  }

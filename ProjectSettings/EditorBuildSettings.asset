@@ -8,4 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 0
+    path: Assets/EasyTouchBundle/EasyTouch/Examples/4.X/SimpleExamples/TwoFingers.unity
+    guid: d82248ce6f3cbd34680b70fe59a53523
+  - enabled: 0
+    path: Assets/EasyTouchBundle/EasyTouch/Examples/5.X new features/QuickGesture.unity
+    guid: 897a68b4076b4f441b4ae694f52a349a
+  - enabled: 0
+    path: Assets/EasyTouchBundle/EasyTouchControls/Examples/Version 1.X/TouchPad-Event-Input.unity
+    guid: e1263d15ed65724498ce68cbc1ccc3dc
   m_configObjects: {}

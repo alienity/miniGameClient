@@ -23,4 +23,8 @@ public class ChargeSkillMsg : MessageBase
 
     public ChargeSkillMsg() { }
 
+    public override string ToString()
+    {
+        return string.Format("GId: {0}, UId: {1}, ProcessId: {2}, ChargeCurrentTime: {3}, TouchId: {4}", gId, uId, processId, chargeCurrentTime, touchId);
+    }
 }

@@ -13,6 +13,7 @@ public class reStartCountdown : MonoBehaviour
     {
         countdownText = GetComponent<Text>();
         panelController = FindObjectOfType<PanelController>();
+        Client.Instance.networkClient.Disconnect();
         StartCoroutine(CountDownToStart(countdown));
     }
 
@@ -25,6 +26,6 @@ public class reStartCountdown : MonoBehaviour
             --time;
         }
 
-        panelController.SwitchToStage(Stage.StartStage);
+        panelController.SwitchToStageUI(Stage.StartStage);
     }
 }

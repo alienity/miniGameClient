@@ -89,21 +89,16 @@ public class Client : MonoBehaviour
         }
         else
         {
-            TryConnectToGameServer();
+            if (!networkClient.isConnected)
+            {
+                networkClient.Connect(ipv4, portTCP);
+            }
         }
     }
 
     private void OnConnect(NetworkMessage netmsg)
     {
-        Debug.Log("client connected");
+        Debug.Log("client connected" + netmsg.conn);
     }
 
-    public void TryConnectToGameServer()
-    {
-        if (!networkClient.isConnected)
-        {
-           networkClient.Connect(ipv4, portTCP);
-           Debug.Log("is connecting to game server");
-        }
-    }
 }

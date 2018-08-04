@@ -10,7 +10,6 @@ public class ReConnectHandler: MonoBehaviour
     private RoleChoosingUIController roleChoosingUiController;
     private RoleChooseHandler roleChooseHandler;
 
-    private int curReconnectTimes;
     public int maxReconnectTimes = 10; // 最大的尝试重连次数
     public float waitTimePerTry = 10; // 每次重连尝试间的间隔时间
 
@@ -44,7 +43,8 @@ public class ReConnectHandler: MonoBehaviour
                 {
                     // Todo 询问session时如果没有属于自己的sessionID，说明玩家误入游戏房间, 要怎么告诉玩家当前不能游戏，maybe跳到一个提示界面，告玩家当前游戏不可用
                     Debug.Log("该玩家没有sessionID，不能进行断线重连");
-                    panelController.SwitchToStage(Stage.StartStage);
+                    Client.Instance.networkClient.Disconnect();
+                    panelController.SwitchToStageUI(Stage.StartStage);
                     return;
                 }
             }
@@ -76,10 +76,10 @@ public class ReConnectHandler: MonoBehaviour
                         case Stage.Prepare:
                             // Todo 需要一个单独的界面显示错误信息
                             Debug.LogError("不应该在准备时掉线");
-                            panelController.SwitchToStage(Stage.StartStage);
+                            panelController.SwitchToStageUI(Stage.Prepare);
                             return;
                         case Stage.ChoosingRoleStage:
-                            panelController.SwitchToStage(Stage.ChoosingRoleStage);
+                            panelController.SwitchToStageUI(Stage.ChoosingRoleStage);
                             var cur_session2role = sessionMsg.GetSession2Role();
                             var cur_confirmed = sessionMsg.GetSession2Confirm();
                             var cur_session2name = sessionMsg.GetSessionToName();
@@ -89,7 +89,7 @@ public class ReConnectHandler: MonoBehaviour
                         case Stage.GammingStage:
                             Client.Instance.gId = sessionMsg.gid;
                             Client.Instance.uId = sessionMsg.uid;
-                            panelController.SwitchToStage(Stage.GammingStage);
+                            panelController.SwitchToStageUI(Stage.GammingStage);
                             Debug.Log("received roll to gamming " + sessionMsg);
                             break;
                 }
@@ -109,13 +109,19 @@ public class ReConnectHandler: MonoBehaviour
 
     private IEnumerator TryToReConnect()
     {
+        int curReconnectTimes = 0;
         Text errorText = panelController.reconnectErrorText;
-        while (!Client.Instance.networkClient.isConnected && Client.Instance.networkClient.ReconnectToNewHost(Client.ipv4, Client.portTCP) && (curReconnectTimes++ < maxReconnectTimes))
+        while (!Client.Instance.networkClient.isConnected && (curReconnectTimes++ < maxReconnectTimes))
         {
+            Client.Instance.networkClient.Connect(Client.ipv4, Client.portTCP); 
             string errorMsg = "重连第" + curReconnectTimes  +"次";
             Debug.Log(errorMsg);
             errorText.text = errorMsg;
-            yield return new WaitForSeconds(waitTimePerTry);      
+            yield return new WaitForSeconds(waitTimePerTry);
+            if (!Client.Instance.networkClient.isConnected)
+            {
+                Client.Instance.networkClient.Disconnect();
+            }
         }
 
         if (Client.Instance.networkClient.isConnected)
