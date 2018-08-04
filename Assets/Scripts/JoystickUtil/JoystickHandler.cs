@@ -216,10 +216,10 @@ public class JoystickHandler : MonoBehaviour
         float coolingTime = msg.coolingTime;
         float totalCoolingTime = msg.totalCoolingTime;
 
-        if (gamePanelAvi)
-            eTCJoystick.activated = true;
-        else
-            eTCJoystick.activated = false;
+//        if (gamePanelAvi)
+//            eTCJoystick.activated = true;
+//        else
+//            eTCJoystick.activated = false;
 
         //if (coolingTime <= 0)
         //    eTCChargeButton.activated = true;
