@@ -7,12 +7,13 @@ public class PanelController : MonoBehaviour
 {
     public GameObject preparePanel;
     public GameObject startPanel;
+    public GameObject connectingToRoomPanel;
     public GameObject producerListPanel;
     public GameObject roomCanvas;
     public GameObject gamePanel;
     public GameObject penguTouchPadPanel;
     public GameObject gameOverPanel;
-    public GameObject connectingToNet;
+    public GameObject waitingOtherPlayerPanel;
     public GameObject reconnectPanel;
     public Text reconnectErrorText;
 
@@ -32,8 +33,10 @@ public class PanelController : MonoBehaviour
         panels.Add(gamePanel);
         panels.Add(penguTouchPadPanel);
         panels.Add(gameOverPanel);
-        panels.Add(connectingToNet);
+        panels.Add(waitingOtherPlayerPanel);
         panels.Add(reconnectPanel);
+        // **注意**connectingToRoomPanel 在 startPanel 中
+        panels.Add(connectingToRoomPanel);
     }
 
     private void Start()
@@ -71,6 +74,7 @@ public class PanelController : MonoBehaviour
 
     public void SwitchToStage(Stage stage)
     {
+        Debug.Log("switch stage: " + stage);
         switch (stage)
         {
             case Stage.StartStage:
@@ -82,6 +86,8 @@ public class PanelController : MonoBehaviour
                 break;
             case Stage.Prepare:
                 Client.Instance.StartClient();
+                break;
+            case Stage.ConnectedToChooseRoomStage:
                 break;
             case Stage.ChoosingRoleStage:
                 break;
@@ -109,11 +115,11 @@ public class PanelController : MonoBehaviour
      */
     public void SwitchToStageUI(Stage stage)
     {
-        // Todo 还没有找到服务器，就不能进入游戏   Client.Instance.networkClient.isConnected的判断是游戏结束后重新
-        if (stage == Stage.Prepare && Client.ipv4 == null && Client.Instance.networkClient.isConnected)
-        {
-            return;
-        }
+//        // Todo 还没有找到服务器，就不能进入游戏   Client.Instance.networkClient.isConnected的判断是游戏结束后重新
+//        if (stage == Stage.Prepare && Client.ipv4 == null && Client.Instance.networkClient.isConnected)
+//        {
+//            return;
+//        }
 
         foreach (GameObject pgo in panels)
         {
@@ -131,20 +137,24 @@ public class PanelController : MonoBehaviour
 
         if (roleChoosingUIController != null)
         {
-            roleChoosingUIController.ResetUI();
+            roleChoosingUIController.ResetChooseRoleUI();
         }
 
         switch (stage)
         {
             case Stage.StartStage:
                 startPanel.SetActive(true);
+                connectingToRoomPanel.SetActive(false);
                 break;
             case Stage.Prepare:
-                connectingToNet.SetActive(true);
-                Client.Instance.StartClient();
+                startPanel.SetActive(true);
+                connectingToRoomPanel.SetActive(true);
+                break;
+            case Stage.ConnectedToChooseRoomStage:
+                waitingOtherPlayerPanel.SetActive(true);
                 break;
             case Stage.ChoosingRoleStage:
-                FindObjectOfType<RoleChoosingUIController>().ResetUI();
+                FindObjectOfType<RoleChoosingUIController>().ResetChooseRoleUI();
                 roomCanvas.SetActive(true);
                 break;
             case Stage.GammingStage:

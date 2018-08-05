@@ -161,7 +161,7 @@ public class JoystickHandler : MonoBehaviour
     {
         ChargeSkillMsg csm = new ChargeSkillMsg(Client.Instance.gId, Client.Instance.uId, chargeStartTime.ToString(), Time.time, 1);
         //new ChargeSkillMsg(gId, uId, chargeStartTime, 0, true);
-        Debug.Log("OnChargeOverTouchPad 结束蓄力: " + csm);
+//        Debug.Log("OnChargeOverTouchPad 结束蓄力: " + csm);
 
         csmQueue.Enqueue(csm);
         touchStartImg.enabled = false;
@@ -199,7 +199,7 @@ public class JoystickHandler : MonoBehaviour
             if (touchStartImg.isActiveAndEnabled)
             {
                 ChargeSkillMsg csm = new ChargeSkillMsg(Client.Instance.gId, Client.Instance.uId, chargeStartTime.ToString(), Time.time, 0);
-                Debug.Log("OnCharge " + csm);
+//                Debug.Log("OnCharge " + csm);
                 csmQueue.Enqueue(csm);
             }
             SendUpdateJoystickAndSkillMsg();

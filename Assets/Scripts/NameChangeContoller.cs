@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class NameChangeContoller : MonoBehaviour
 {
-    private InputField inputField;
+    public InputField inputField;
     private PanelController panelController;
     public Button submitButton;
 
@@ -13,7 +13,6 @@ public class NameChangeContoller : MonoBehaviour
     private void Start()
     {
 //        PlayerPrefs.DeleteKey(NameProperty);
-        inputField = GetComponent<InputField>();
         panelController = FindObjectOfType<PanelController>();
         if (PlayerPrefs.HasKey(NameProperty))
         {

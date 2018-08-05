@@ -13,7 +13,7 @@ public class ReConnectHandler: MonoBehaviour
     public int maxReconnectTimes = 10; // 最大的尝试重连次数
     public float waitTimePerTry = 10; // 每次重连尝试间的间隔时间
 
-
+    // 在PlayerPref中存的sessionID，每个sessionID表示特定游戏场次中的特定玩家
     static public string SESSION_NAME = "cool_sessionId";
 
     private void Start()
@@ -64,7 +64,7 @@ public class ReConnectHandler: MonoBehaviour
                 Debug.Log("received session " + sessionMsg);
                 Client.Instance.sessionId = sessionMsg.sessionId;
                 PlayerPrefs.SetInt(SESSION_NAME, sessionMsg.sessionId);
-                roleChoosingUiController.ResetUI();
+                roleChoosingUiController.ResetChooseRoleUI();
             }
             /*
             * 接收来自服务器的恢复信息，这里才是真正断线重连的逻辑
@@ -100,7 +100,7 @@ public class ReConnectHandler: MonoBehaviour
     public void OnDisconnect(NetworkMessage netmsg)
     {
         Debug.Log("disconnected");
-        if (Client.Instance.stage == Stage.GammingStage || Client.Instance.stage == Stage.ChoosingRoleStage || Client.Instance.stage == Stage.Prepare)
+        if (Client.Instance.stage == Stage.GammingStage || Client.Instance.stage == Stage.ChoosingRoleStage || Client.Instance.stage == Stage.Prepare || Client.Instance.stage == Stage.ConnectedToChooseRoomStage)
         {
             panelController.SwitchToStage(Stage.OfflineStage);
             StartCoroutine(TryToReConnect());

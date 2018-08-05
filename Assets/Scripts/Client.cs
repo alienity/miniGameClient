@@ -10,7 +10,6 @@ public class Client : MonoBehaviour
     public RoleChooseHandler roleChooseHandler;
     public JoystickHandler joystickHandler;
     public AdvanceControlHandler advanceControlHandler;
-    //public NetConnectMaskController netConnectionController;
     public PanelController panelChanger;
     private ReConnectHandler reconnectHandler;
 
@@ -21,7 +20,6 @@ public class Client : MonoBehaviour
     // 用于广播的ip地址
     public static string ipv4;
     
-    private bool flagConnectServer = false;
     private int channelId;
     public static int portTCP = 5555;
     public static int portBroadCastUDP = 6666;
@@ -47,20 +45,11 @@ public class Client : MonoBehaviour
 
     private void Start()
     {
-        flagConnectServer = false;
         // Todo reconnectHandler生命周期和server相同，并且为了尽量避免对editor做改动，暂时就作为component挂载上server了
         reconnectHandler = gameObject.AddComponent<ReConnectHandler>();
         GetServerIP();
     }
 
-//    private void FixedUpdate()
-//    {
-//        if(flagConnectServer==false && ipv4 != null)
-//        {
-//            flagConnectServer = true;
-//            StartClient();
-//        }
-//    }
 
     private void GetServerIP()  // 非阻塞
     {
@@ -99,6 +88,11 @@ public class Client : MonoBehaviour
     private void OnConnect(NetworkMessage netmsg)
     {
         Debug.Log("client connected" + netmsg.conn);
+
+//        if (stage == Stage.Prepare)
+//        {
+//            panelChanger.SwitchToStageUI(Stage.ConnectedToChooseRoomStage);
+//        }
     }
 
 }

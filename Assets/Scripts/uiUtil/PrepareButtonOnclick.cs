@@ -15,8 +15,12 @@ public class PrepareButtonOnclick : MonoBehaviour
 		// 进入等待连接的界面
 		prepareButton.onClick.AddListener(delegate
 		{
-			Client.Instance.StartClient();
-			panelController.SwitchToStageUI(Stage.Prepare);
+			if (Client.Instance.stage == Stage.StartStage && Client.ipv4 != null)
+			{
+				Debug.Log("switch to stage prepare");
+				panelController.SwitchToStageUI(Stage.Prepare);
+				Client.Instance.StartClient();
+			}
 		});
 	}	
 }
