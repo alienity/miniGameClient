@@ -14,12 +14,16 @@ public class GetRTTController : MonoBehaviour
     
     private IEnumerator DisPlayRTT()
     {
-        if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
+        while (true)
         {
-            rttText.text = Client.Instance.networkClient.GetRTT() + "ms";
-            Debug.Log("RTT is " + Client.Instance.networkClient.GetRTT());
+            if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
+            {
+                rttText.text = Client.Instance.networkClient.GetRTT() + "ms";
+                Debug.Log("RTT is " + Client.Instance.networkClient.GetRTT());
+            }
             yield return new WaitForSeconds(5);
-        }        
+
+        }
     }
 
 }

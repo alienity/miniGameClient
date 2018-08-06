@@ -12,7 +12,8 @@ public class JoystickHandler : MonoBehaviour
     // 现在不需要JoystickController，使用EasyTouch插件，完成摇杆和技能的操控
 
     // 摇杆对象
-    public ETCJoystick eTCJoystick;
+    public ETCJoystick pigJoystick;
+    public ETCJoystick penguJoystick;
 
     public ETCTouchPad eTCTouchPad;
     public Image touchStartImg;
@@ -20,7 +21,8 @@ public class JoystickHandler : MonoBehaviour
 
     private Vector2 curOffset = Vector2.zero;
     // 蓄力对象
-    public ETCButton eTCChargeButton;
+    public ETCButton pigButton;
+    public ETCButton penguButton;
 
     // 开始蓄力的时间点
     private float chargeStartTime = 0;
@@ -43,15 +45,36 @@ public class JoystickHandler : MonoBehaviour
             gamePanelUIController = FindObjectOfType<GamePanelUIController>();
         Debug.Log("JoystickHandler start");
         
-        eTCChargeButton.onDown.AddListener(OnDown);
-        
-        eTCTouchPad.onTouchStart.AddListener(OnChargeStartTouchPad);
-        eTCTouchPad.onMoveSpeed.AddListener(OnChargeNowTouchPad);
-        eTCTouchPad.onTouchUp.AddListener(OnChargeOverTouchPad);
+        InitPigJoystick();
+        InitPenguTouchpad();
+        InitPenguJoystick();
+
+    }
+
+    private void InitPenguTouchpad()
+    {
+        eTCTouchPad.onTouchStart.AddListener(OnPenguChargeStartTouchPad);
+        eTCTouchPad.onMoveSpeed.AddListener(OnPenguChargeNowTouchPad);
+        eTCTouchPad.onTouchUp.AddListener(OnPenguChargeOverTouchPad);
         touchStartImg.raycastTarget = false;
         touchEndImg.raycastTarget = false;
         touchStartImg.enabled = false;
         touchEndImg.enabled = false;
+    }
+
+    private void InitPenguJoystick()
+    {
+        penguJoystick.onMove.AddListener(OnJoystickMove);
+        penguJoystick.onMoveEnd.AddListener(OnJoystickEnd);
+        penguButton.onPressed.AddListener(OnPenguChargeNowJoystick);
+        penguButton.onUp.AddListener(OnPenguChargeOverJoystick);
+    }
+
+    private void InitPigJoystick()
+    {
+        pigJoystick.onMove.AddListener(OnJoystickMove);
+        pigJoystick.onMoveEnd.AddListener(OnJoystickEnd);
+        pigButton.onDown.AddListener(OnPigDown);
 
     }
 
@@ -76,13 +99,16 @@ public class JoystickHandler : MonoBehaviour
         jcmQueue.Enqueue(jcm);
     }
 
+    /**
+     * *******************猪的按钮***************************
+     */
     /// <summary>
     /// 蓄力是发送开始时间和当前时间到服务器，当服务器首次接收到 chargeStartTime != -1 的数据时开始蓄力，直到接收到
     /// chargeStartTime == -1 的情况，停止计时，发动蓄力的技能，并返回冷却时间到手机端。或者服务器计时到终点结束，
     /// 手机端强行结束蓄力
     /// </summary>
     // 为蓄力按钮注册蓄力事件
-    public void OnDown()
+    public void OnPigDown()
     {
 
         int gId = Client.Instance.gId;
@@ -91,25 +117,42 @@ public class JoystickHandler : MonoBehaviour
         RushSkillMag rsm = new RushSkillMag(gId, uId, true);
         rsmQueue.Enqueue(rsm);
     }
+    
+    /**
+     * *******************企鹅的摇杆版本***************************
+     */
 
-    // 按着蓄力
-//    public void OnChargeNow()
-//    {
-//        //if (!IsSkillAvi()) return;
-//
-//        int gId = Client.Instance.gId;
-//        int uId = Client.Instance.uId;
-//
-//        if (uId == 1) return;
-//
-//        if (chargeStartTime == 0)
-//            chargeStartTime = Time.time;
-//
-//        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 0);
-//        csmQueue.Enqueue(csm);
-//    }
+//     按着蓄力
+    public void OnPenguChargeNowJoystick()
+    {
 
-    public void OnChargeStartTouchPad()
+        int gId = Client.Instance.gId;
+        int uId = Client.Instance.uId;
+
+        if (chargeStartTime == 0)
+            chargeStartTime = Time.time;
+
+        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 0);
+        csmQueue.Enqueue(csm);
+    }
+    // 结束蓄力
+    public void OnPenguChargeOverJoystick()
+    {
+        int gId = Client.Instance.gId;
+        int uId = Client.Instance.uId;
+
+        Debug.Log("结束蓄力");
+        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 1);
+        csmQueue.Enqueue(csm);
+        chargeStartTime = 0;
+    }
+    
+    
+    /**
+    * *******************企鹅的触控版本***************************
+    */
+    
+    public void OnPenguChargeStartTouchPad()
     {
         curOffset = Vector2.zero;
         chargeStartTime = Time.time;
@@ -134,7 +177,7 @@ public class JoystickHandler : MonoBehaviour
     }
 
     
-    public void OnChargeNowTouchPad(Vector2 speed)
+    public void OnPenguChargeNowTouchPad(Vector2 speed)
     {
         curOffset.x += speed.x * Time.fixedDeltaTime;
         curOffset.y += speed.y * Time.fixedDeltaTime;
@@ -157,34 +200,24 @@ public class JoystickHandler : MonoBehaviour
 
     }
 
-    public void OnChargeOverTouchPad()
+    public void OnPenguChargeOverTouchPad()
     {
         ChargeSkillMsg csm = new ChargeSkillMsg(Client.Instance.gId, Client.Instance.uId, chargeStartTime.ToString(), Time.time, 1);
-        //new ChargeSkillMsg(gId, uId, chargeStartTime, 0, true);
-//        Debug.Log("OnChargeOverTouchPad 结束蓄力: " + csm);
-
         csmQueue.Enqueue(csm);
         touchStartImg.enabled = false;
         touchEndImg.enabled = false;
     }
 
-//    // 结束蓄力
-//    public void OnChargeOver()
-//    {
-//        //if (!IsSkillAvi()) return;
-//
-//        int gId = Client.Instance.gId;
-//        int uId = Client.Instance.uId;
-//
-//        if (uId == 1) return;
-//        
-//        Debug.Log("结束蓄力");
-//        ChargeSkillMsg csm = new ChargeSkillMsg(gId, uId, chargeStartTime.ToString(), Time.time, 1);
-//        //new ChargeSkillMsg(gId, uId, chargeStartTime, 0, true);
-//        csmQueue.Enqueue(csm);
-//
-//        chargeStartTime = 0;
-//    }
+    private void PenguTouchPadCharge()
+    {
+        if (touchStartImg.isActiveAndEnabled)
+        {
+            ChargeSkillMsg csm = new ChargeSkillMsg(Client.Instance.gId, Client.Instance.uId, chargeStartTime.ToString(), Time.time, 0);
+//                Debug.Log("OnCharge " + csm);
+            csmQueue.Enqueue(csm);
+        }
+    }
+
 
     private void FixedUpdate()
     {
@@ -196,12 +229,7 @@ public class JoystickHandler : MonoBehaviour
 
         if (enableControl && networkClient != null && networkClient.isConnected)
         {
-            if (touchStartImg.isActiveAndEnabled)
-            {
-                ChargeSkillMsg csm = new ChargeSkillMsg(Client.Instance.gId, Client.Instance.uId, chargeStartTime.ToString(), Time.time, 0);
-//                Debug.Log("OnCharge " + csm);
-                csmQueue.Enqueue(csm);
-            }
+            PenguTouchPadCharge();
             SendUpdateJoystickAndSkillMsg();
         }
         
@@ -217,14 +245,14 @@ public class JoystickHandler : MonoBehaviour
         float totalCoolingTime = msg.totalCoolingTime;
 
 //        if (gamePanelAvi)
-//            eTCJoystick.activated = true;
+//            pigJoystick.activated = true;
 //        else
-//            eTCJoystick.activated = false;
+//            pigJoystick.activated = false;
 
         //if (coolingTime <= 0)
-        //    eTCChargeButton.activated = true;
+        //    pigButton.activated = true;
         //else
-        //    eTCChargeButton.activated = false;
+        //    pigButton.activated = false;
         gamePanelUIController.showCoolingTimeAndICone(coolingTime, totalCoolingTime);
         this.coolingTime = coolingTime;
 

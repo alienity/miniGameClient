@@ -10,8 +10,9 @@ public class PanelController : MonoBehaviour
     public GameObject connectingToRoomPanel;
     public GameObject producerListPanel;
     public GameObject roomCanvas;
-    public GameObject gamePanel;
+    public GameObject pigJoyStickPanel;
     public GameObject penguTouchPadPanel;
+    public GameObject penguJoystickPanel;
     public GameObject gameOverPanel;
     public GameObject waitingOtherPlayerPanel;
     public GameObject reconnectPanel;
@@ -30,8 +31,9 @@ public class PanelController : MonoBehaviour
         panels.Add(startPanel);
         panels.Add(producerListPanel);
         panels.Add(roomCanvas);
-        panels.Add(gamePanel);
+        panels.Add(pigJoyStickPanel);
         panels.Add(penguTouchPadPanel);
+        panels.Add(penguJoystickPanel);
         panels.Add(gameOverPanel);
         panels.Add(waitingOtherPlayerPanel);
         panels.Add(reconnectPanel);
@@ -166,11 +168,9 @@ public class PanelController : MonoBehaviour
                 }
                 else
                 {
-                    gamePanel.SetActive(true);
+                    pigJoyStickPanel.SetActive(true);
                     Debug.Log("switch to pig panel"    );
-
                 }
-
                 break;
             case Stage.ProducerListStage:
                 producerListPanel.SetActive(true);
