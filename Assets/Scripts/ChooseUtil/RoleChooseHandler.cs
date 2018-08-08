@@ -41,7 +41,7 @@ public class RoleChooseHandler : MonoBehaviour
 
     private void SendConfirmMessage(int gId, int uId)
     {
-        ConfirmChooseMsg ccm = new ConfirmChooseMsg(gId, uId);
+        ConfirmChooseMsg ccm = new ConfirmChooseMsg(gId, uId, false);
 //        Debug.Log("chooser uid " + uId);
         networkClient.Send(CustomMsgType.Confirm, ccm);
     }

@@ -9,21 +9,10 @@ public class GetRTTController : MonoBehaviour
     private void Awake()
     {
         rttText = GetComponent<Text>();
-        StartCoroutine(DisPlayRTT());
     }
-    
-    private IEnumerator DisPlayRTT()
+
+    private void FixedUpdate()
     {
-        while (true)
-        {
-            if (Client.Instance.networkClient != null && Client.Instance.networkClient.isConnected)
-            {
-                rttText.text = Client.Instance.networkClient.GetRTT() + "ms";
-                Debug.Log("RTT is " + Client.Instance.networkClient.GetRTT());
-            }
-            yield return new WaitForSeconds(5);
-
-        }
+        rttText.text = Client.Instance.networkClient.GetRTT() + "ms";
     }
-
 }

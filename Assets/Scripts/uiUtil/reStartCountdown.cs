@@ -25,7 +25,6 @@ public class reStartCountdown : MonoBehaviour
             yield return new WaitForSeconds(1);
             --time;
         }
-
-        panelController.SwitchToStageUI(Stage.StartStage);
+        panelController.SwitchToStage(Stage.StartStage);
     }
 }
