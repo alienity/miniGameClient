@@ -119,9 +119,6 @@ public class RoleChoosingUIController : MonoBehaviour {
         for (int i = 0; i < 8; i++)
         {
             SetButtonRoleAvailable(i / 2, i % 2);
-//            buttons[i].enabled = true;
-//       s     buttons[i].interactable = true;
-
         }
         confirmButton.interactable = true;
     }

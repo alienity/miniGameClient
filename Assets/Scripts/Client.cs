@@ -13,6 +13,9 @@ public class Client : MonoBehaviour
     public PanelController panelChanger;
     private ReConnectHandler reconnectHandler;
 
+    public int curRoomId;
+    public bool InRoom;
+    
     // 获取到的gId和uId
     public int gId = -1;
     public int uId = -1;

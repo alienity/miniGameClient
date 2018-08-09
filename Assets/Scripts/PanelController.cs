@@ -101,6 +101,7 @@ public class PanelController : MonoBehaviour
                 // 游戏结束时断开时断开与服务器的连接, 删除sessionid
                 PlayerPrefs.DeleteKey(ReConnectHandler.SESSION_NAME);
                 Client.Instance.sessionId = -1;
+                Client.Instance.InRoom = false;
                 Client.Instance.networkClient.Disconnect();
                 Debug.Log("deleted session");
                 break;

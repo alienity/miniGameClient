@@ -58,7 +58,7 @@ public class RoleChooseHandler : MonoBehaviour
 
         int newGid = i / 2;
         int newUid = i % 2;
-        ChooseRequestMsg chooseRequest = new ChooseRequestMsg(newGid, newUid, Client.Instance.playerName);
+        ChooseRequestMsg chooseRequest = new ChooseRequestMsg(Client.Instance.curRoomId, newGid, newUid, Client.Instance.playerName);
         if (networkClient == null) networkClient = Client.Instance.networkClient;
         networkClient.Send(CustomMsgType.Choose, chooseRequest);
         Debug.Log("send " + chooseRequest);

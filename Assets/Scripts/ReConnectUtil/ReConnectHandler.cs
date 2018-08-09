@@ -48,23 +48,38 @@ public class ReConnectHandler: MonoBehaviour
                     return;
                 }
             }
-            SessionMsg responSessionMsg = new SessionMsg(false, true, Client.Instance.sessionId, Client.Instance.stage, false, 0, 0, null, null, null);
+            SessionMsg responSessionMsg = new SessionMsg(false, true, Client.Instance.sessionId, 0,Client.Instance.stage, false, 0, 0, null, null, null);
             Client.Instance.networkClient.Send(CustomMsgType.Session, responSessionMsg);
             Debug.Log("reply with sessionId " + responSessionMsg);
 
         }
         else 
         {
-            /* 记录服务器分配的sessionId
+            /*
+             * 
+             * 服务器分配sessionId时的逻辑
              * askSession为假，不是断线重连，服务器会分配一个sessionId给客户端, 客户端需要记录下这个session
              */
-            if (sessionMsg.provideSessionId)
+            if (sessionMsg.provideSessionInfo)
             {
-                Debug.Assert(sessionMsg.provideSessionId);
-                Debug.Log("received session " + sessionMsg);
-                Client.Instance.sessionId = sessionMsg.sessionId;
-                PlayerPrefs.SetInt(SESSION_NAME, sessionMsg.sessionId);
-                roleChoosingUiController.ResetChooseRoleUI();
+                /*
+                 * 断线重连会发生这样一种状况：客户端在游戏时断线，但是并不连接，在下一次服务器游戏开始后，客户端进行了重连。这是客户端实际需要退回到开始界面，不进入房间
+                 */
+                if (Client.Instance.InRoom)
+                {
+                    Client.Instance.InRoom = false;
+                    panelController.SwitchToStage(Stage.StartStage);
+                }
+                else
+                {
+                    Debug.Log("received session " + sessionMsg);
+                    Client.Instance.sessionId = sessionMsg.sessionId;
+                    Client.Instance.InRoom = true;
+                    Client.Instance.curRoomId = sessionMsg.roomId;
+                    PlayerPrefs.SetInt(SESSION_NAME, sessionMsg.sessionId);
+                    panelController.SwitchToStage(Stage.ConnectedToChooseRoomStage);
+                }
+
             }
             /*
             * 接收来自服务器的恢复信息，这里才是真正断线重连的逻辑
