@@ -28,15 +28,29 @@ public class RoleChooseHandler : MonoBehaviour
             button.onClick.AddListener(delegate { SetRole(button); });
         }
 
-        roleChoosingUiController.confirmButton.onClick.AddListener(delegate
+        foreach(Button button in roleChoosingUiController.ConfirmButtons)
         {
-            int gId = Client.Instance.gId;
-            int uId = Client.Instance.uId;
-            SendConfirmMessage(gId, uId);
-            roleChoosingUiController.OnConfirm(gId, uId);
-            gamePanelUIController.showIconeAndName(gId, uId, Client.Instance.playerName);
-            Debug.Log("确定了");
-        });
+            button.onClick.AddListener(delegate
+            {
+                int gId = Client.Instance.gId;
+                int uId = Client.Instance.uId;
+                SendConfirmMessage(gId, uId);
+                roleChoosingUiController.OnConfirm(gId, uId, Client.Instance.playerName);
+                gamePanelUIController.showIconeAndName(gId, uId, Client.Instance.playerName);
+                Debug.Log("确定了");
+            });
+        }
+
+        // 旧版本
+        //roleChoosingUiController.confirmButton.onClick.AddListener(delegate
+        //{
+        //    int gId = Client.Instance.gId;
+        //    int uId = Client.Instance.uId;
+        //    SendConfirmMessage(gId, uId);
+        //    roleChoosingUiController.OnConfirm(gId, uId);
+        //    gamePanelUIController.showIconeAndName(gId, uId, Client.Instance.playerName);
+        //    Debug.Log("确定了");
+        //});
     }
 
     private void SendConfirmMessage(int gId, int uId)
@@ -88,7 +102,7 @@ public class RoleChooseHandler : MonoBehaviour
             {
                 Client.Instance.gId = gid;
                 Client.Instance.uId = uid;
-                roleChoosingUiController.SetRoleSelected(Client.Instance.gId, Client.Instance.uId);
+                roleChoosingUiController.SetRoleSelected(Client.Instance.gId, Client.Instance.uId, Client.Instance.playerName);
                 continue;
             }
             roleChoosingUiController.SetButtonRoleUnavailable(gid, uid);
@@ -99,7 +113,7 @@ public class RoleChooseHandler : MonoBehaviour
             int roleId = session2roles[session];
             if (session == Client.Instance.sessionId)
             {
-                roleChoosingUiController.OnConfirm(roleId/2, roleId%2);
+                roleChoosingUiController.OnConfirm(roleId/2, roleId%2, Client.Instance.playerName);
             }
             else
             {
