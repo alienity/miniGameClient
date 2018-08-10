@@ -7,15 +7,6 @@ using UnityEngineInternal;
 
 public class RoleChoosingUIController : MonoBehaviour
 {
-    //public Button P1Pengu;
-    //public Button P1Pig;
-    //public Button P2Pengu;
-    //public Button P2Pig;
-    //public Button P3Pengu;
-    //public Button P3Pig;
-    //public Button P4Pengu;
-    //public Button P4Pig;
-
     public List<Sprite> BackgroundSprites;
     public Image BackgroundImage;
 
@@ -38,24 +29,6 @@ public class RoleChoosingUIController : MonoBehaviour
     public List<Image> BarImages;
     public List<Button> ConfirmButtons;
 
-    //public Sprite PenguHeadAltern;
-    //public Sprite PenguHeadSelect;
-    //public Sprite PenguHeadLock;
-    //public Sprite PigHeadAltern;
-    //public Sprite PigHeadSelect;
-    //public Sprite PigHeadLock;
-    //public Sprite ConfrimButtonNoPush;
-    //public Sprite ConfrimButtonPushed;
-
-    //[System.Serializable]
-    //public struct SpritesUI
-    //{
-    //    public Image PangBackgroundImage;
-    //    public Image PigBackgroundImage;
-    //    public Image StarImage;
-    //}
-    //public List<SpritesUI> spritesUI;
-    //public List<Text> playerNames;
     private List<string> defaultNames = new List<string>()
     {
         "企鹅-P1",
@@ -68,20 +41,12 @@ public class RoleChoosingUIController : MonoBehaviour
         "猪猪-P4"
     };
 
-    //public Button confirmButton;
-
     public bool roleSelected { get; private set; } 
 
     public System.Action confirmFinalAction;
 
     public void InitBackSpritesUI()
     {
-        //foreach(SpritesUI su in spritesUI)
-        //{
-        //    su.PangBackgroundImage.gameObject.SetActive(false);
-        //    su.PigBackgroundImage.gameObject.SetActive(false);
-        //    su.StarImage.gameObject.SetActive(false);
-        //}
 
         BackgroundImage.sprite = null;
         int i = 0;
@@ -109,25 +74,6 @@ public class RoleChoosingUIController : MonoBehaviour
         {
             buttons[i++] = pIcone.button;
         }
-
-        /* 旧版本
-        buttons = new Button[8];
-        buttons[0] = P1Pengu;
-        buttons[1] = P1Pig;
-        buttons[2] = P2Pengu;
-        buttons[3] = P2Pig;
-        buttons[4] = P3Pengu;
-        buttons[5] = P3Pig;
-        buttons[6] = P4Pengu;
-        buttons[7] = P4Pig;
-
-        confirmButton.GetComponent<Image>().sprite = ConfrimButtonNoPush;
-        for (int i = 0; i < 4; ++i)
-        {
-            buttons[2 * i].GetComponent<Image>().sprite = PenguHeadAltern;
-            buttons[2 * i + 1].GetComponent<Image>().sprite = PigHeadAltern;
-        }
-        */
 
     }
 
@@ -163,28 +109,6 @@ public class RoleChoosingUIController : MonoBehaviour
             ConfirmButtons[gid].interactable = false;
             // 重置判断
             roleSelected = false;
-
-            /* 旧版本
-            // 在选择角色按钮上添加一层“蒙布”
-            for (int i = 0; i < 4; ++i)
-            {
-                if(buttons[2 * i].GetComponent<Image>().sprite == PenguHeadAltern)
-                    buttons[2 * i].GetComponent<Image>().sprite = PenguHeadSelect;
-                if(buttons[2 * i + 1].GetComponent<Image>().sprite == PigHeadAltern)
-                    buttons[2 * i + 1].GetComponent<Image>().sprite = PigHeadSelect;
-            }
-            SetButtonRoleLocked(gid, uid);
-            spritesUI[gid].StarImage.gameObject.SetActive(true);
-            confirmButton.GetComponent<Image>().sprite = ConfrimButtonPushed;
-            foreach (Button button in buttons)
-            {
-                button.interactable = false;
-            }
-
-            confirmButton.interactable = false;
-            // 重置判断
-            roleSelected = false;
-            */
         }
     }
 
@@ -215,27 +139,12 @@ public class RoleChoosingUIController : MonoBehaviour
         playerIcone[gid * 2 + uid].CrownImage.gameObject.SetActive(false);
         BarImages[gid].gameObject.SetActive(false);
         buttons[gid * 2 + uid].interactable = true;
-        /* 旧版本
-        //        Debug.Log(gid+ " " + uid + " available");
-        //buttons[gid*2 + uid].interactable = true;
-
-        buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadAltern : PigHeadAltern;
-        buttons[gid * 2 + uid].interactable = true;
-
-        if (uid == 0)
-        {
-            spritesUI[gid].PangBackgroundImage.gameObject.SetActive(false);
-        }
-        else
-        {
-            spritesUI[gid].PigBackgroundImage.gameObject.SetActive(false);
-        }
-        */
     }
 
     // 到时候在这里为 button 设置效果
     public void SetButtonRoleUnavailable(int gid, int uid)
     {
+//        Debug.Log(gid + " " + uid + " selected");
         BarImages[gid].gameObject.SetActive(false);
         playerIcone[gid * 2 + uid].HeadSelect.gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].ConfirmMaskImage.gameObject.SetActive(true);
@@ -243,31 +152,17 @@ public class RoleChoosingUIController : MonoBehaviour
         playerIcone[gid * 2 + uid].ChooseFrameImage.gameObject.SetActive(false);
         playerIcone[gid * 2 + uid].CrownImage.gameObject.SetActive(false);
         buttons[gid * 2 + uid].interactable = false;
-        /* 旧版本
-//        Debug.Log(gid + " " + uid + " selected");
-        buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadSelect : PigHeadSelect;
-        buttons[gid * 2 + uid].interactable = false;
-        if (uid == 0)
-        {
-            spritesUI[gid].PangBackgroundImage.gameObject.SetActive(false);
-        }
-        else
-        {
-            spritesUI[gid].PigBackgroundImage.gameObject.SetActive(false);
-        }
-//        Debug.Log(gid + " " + uid + " unavailable");
-        */
+        //        Debug.Log(gid + " " + uid + " unavailable");
     }
 
     // todo 到时候在这里为 button 设置效果
     public void SetRoleSelected(int gid, int uid, string playerName)
     {
+//        Debug.Log(gid + " " + uid + " selected");
         roleSelected = true;
         buttons[gid * 2 + uid].interactable = false;
         BackgroundImage.sprite = BackgroundSprites[gid];
         BarImages[gid].gameObject.SetActive(true);
-        //GameObject GroupPanel = BarImages[gid].gameObject.transform.parent.gameObject.transform.parent.gameObject;
-        //GroupPanel.transform.SetAsLastSibling();
         AllGroupPanels[gid].transform.SetAsLastSibling();
         playerIcone[gid * 2 + uid].HeadSelect.gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].ConfirmMaskImage.gameObject.SetActive(false);
@@ -275,18 +170,5 @@ public class RoleChoosingUIController : MonoBehaviour
         playerIcone[gid * 2 + uid].ConfirmFrameImage.gameObject.SetActive(false);
         playerIcone[gid * 2 + uid].ChooseFrameImage.gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].CrownImage.gameObject.SetActive(false);
-        /* 旧版本
-//        Debug.Log(gid + " " + uid + " selected");
-        roleSelected = true;
-        buttons[gid * 2 + uid].interactable = false;
-        if (uid == 0)
-        {
-            spritesUI[gid].PangBackgroundImage.gameObject.SetActive(true);
-        }
-        else
-        {
-            spritesUI[gid].PigBackgroundImage.gameObject.SetActive(true);
-        }
-        */
     }
 }
