@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class AdvanceControlHandler: MonoBehaviour
@@ -11,15 +12,27 @@ public class AdvanceControlHandler: MonoBehaviour
      */
     public void OnReceiveAdvanceControl(NetworkMessage netmsg)
     {
-#if UNITY_ANDROID
+//#if UNITY_ANDROID todo handhled.viberate 根据文档是跨平台的
         AdvanceControlMsg advanceControlMsg = netmsg.ReadMessage<AdvanceControlMsg>();
         switch (advanceControlMsg.type)
         {
                 case AdvanceControlType.Viberate:
-                    Handheld.Vibrate();
+                    StartCoroutine(Viberate(advanceControlMsg.duration, advanceControlMsg.interval));
                 Debug.Log("接收到振动");
                 break;
         }
-#endif
+//#endif
     }
+
+    private IEnumerator Viberate(float duration, float interval)
+    {
+        WaitForSeconds wait = new WaitForSeconds(interval);
+        for (float time = 0;  time < duration; time += interval)
+        {
+            Handheld.Vibrate();
+            yield return wait;
+        }
+    }
+    
+    
 }
