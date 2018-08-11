@@ -58,6 +58,7 @@ public class RoleChoosingUIController : MonoBehaviour
             pIcone.ConfirmFrameImage.gameObject.SetActive(false);
             pIcone.ChooseFrameImage.gameObject.SetActive(false);
             pIcone.CrownImage.gameObject.SetActive(false);
+            pIcone.button.interactable = true;
         }
 
         foreach(Image im in BarImages)
@@ -70,29 +71,31 @@ public class RoleChoosingUIController : MonoBehaviour
     {
         buttons = new Button[8];
         int i = 0;
-        foreach(PlayerIcone pIcone in playerIcone)
+        foreach (PlayerIcone pIcone in playerIcone)
         {
             buttons[i++] = pIcone.button;
+        }
+        foreach (Button button in ConfirmButtons)
+        {
+            button.interactable = true;
         }
 
     }
 
+    // 按下确认键后的操作函数的被调函数
     public void SetButtonRoleLocked(int gid, int uid)
     {
-        //buttons[gid * 2 + uid].GetComponent<Image>().sprite = (uid == 0) ? PenguHeadLock : PigHeadLock;
-        
-        playerIcone[gid * 2 + uid].HeadSelect.gameObject.SetActive(true);
-        playerIcone[gid * 2 + uid].ConfirmFrameImage.gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].ChooseFrameImage.gameObject.SetActive(false);
+        playerIcone[gid * 2 + uid].ConfirmFrameImage.gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].CrownImage.gameObject.SetActive(true);
         //buttons[gid * 2 + uid].interactable = false;
     }
 
-    public void OnConfirm(int gid, int uid, string platerName)
+    // 按下确认键后的操作
+    public void OnConfirm(int gid, int uid)
     {
-        if (roleSelected)
-        {
-            playerIcone[gid * 2 + uid].NameText.text = platerName;
+        //if (roleSelected)
+        //{
             // 在其他备选按钮添加遮罩
             for (int i = 0; i < 8; ++i)
             {
@@ -102,24 +105,25 @@ public class RoleChoosingUIController : MonoBehaviour
                 }
             }
             SetButtonRoleLocked(gid, uid);
-            foreach (Button button in buttons)
+            foreach (PlayerIcone pIcone in playerIcone)
             {
-                button.interactable = false;
+                pIcone.button.interactable = false;
             }
             ConfirmButtons[gid].interactable = false;
-            // 重置判断
-            roleSelected = false;
-        }
+            // 标志位玩家已确认选择
+            //roleSelected = false;
+        //}
     }
 
+    // 重新进入新的一局，重置全部状态
     public void ResetChooseRoleUI()
     {
         Debug.Log("reset ChooseRole UI");
+
         for (int i = 0; i < 8; i++)
         {
             SetButtonRoleAvailable(i / 2, i % 2);
         }
-        //confirmButton.interactable = true;
     }
 
     public void SetRoleNames(Dictionary<int, string> roleId2names)
@@ -129,46 +133,44 @@ public class RoleChoosingUIController : MonoBehaviour
             playerIcone[i].NameText.text = roleId2names.ContainsKey(i) ? roleId2names[i] : defaultNames[i];
         }
     }
-    
-    // 到时候在这里为 button 设置效果
+
+    // 此函数直接替换为初始化全部UI，因为每次调用此函是都是循环8次将全部用户重置
     public void SetButtonRoleAvailable(int gid, int uid)
     {
         playerIcone[gid * 2 + uid].HeadSelect.gameObject.SetActive(false);
+        playerIcone[gid * 2 + uid].ConfirmMaskImage.gameObject.SetActive(false);
         playerIcone[gid * 2 + uid].NameText.text = defaultNames[gid * 2 + uid];
+        playerIcone[gid * 2 + uid].ConfirmFrameImage.gameObject.SetActive(false);
         playerIcone[gid * 2 + uid].ChooseFrameImage.gameObject.SetActive(false);
         playerIcone[gid * 2 + uid].CrownImage.gameObject.SetActive(false);
+        playerIcone[gid * 2 + uid].button.interactable = true;
+
         BarImages[gid].gameObject.SetActive(false);
-        buttons[gid * 2 + uid].interactable = true;
+        ConfirmButtons[gid].interactable = true;
+        //buttons[gid * 2 + uid].interactable = true;
     }
 
-    // 到时候在这里为 button 设置效果
+    // 其他玩家选择此角色中(当前其他玩家选择中和已确认均为次状态)
     public void SetButtonRoleUnavailable(int gid, int uid)
     {
 //        Debug.Log(gid + " " + uid + " selected");
-        BarImages[gid].gameObject.SetActive(false);
         playerIcone[gid * 2 + uid].HeadSelect.gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].ConfirmMaskImage.gameObject.SetActive(true);
-        playerIcone[gid * 2 + uid].ConfirmFrameImage.gameObject.SetActive(false);
-        playerIcone[gid * 2 + uid].ChooseFrameImage.gameObject.SetActive(false);
-        playerIcone[gid * 2 + uid].CrownImage.gameObject.SetActive(false);
-        buttons[gid * 2 + uid].interactable = false;
-        //        Debug.Log(gid + " " + uid + " unavailable");
+        playerIcone[gid * 2 + uid].button.interactable = false;
+//        Debug.Log(gid + " " + uid + " unavailable");
     }
 
-    // todo 到时候在这里为 button 设置效果
-    public void SetRoleSelected(int gid, int uid, string playerName)
+    // 本机角色选中(未确认状态)
+    public void SetRoleSelected(int gid, int uid)
     {
 //        Debug.Log(gid + " " + uid + " selected");
-        roleSelected = true;
-        buttons[gid * 2 + uid].interactable = false;
+        // 本机选择
+        //roleSelected = true;
+        playerIcone[gid * 2 + uid].button.interactable = false;
+        AllGroupPanels[gid].transform.SetAsLastSibling();
         BackgroundImage.sprite = BackgroundSprites[gid];
         BarImages[gid].gameObject.SetActive(true);
-        AllGroupPanels[gid].transform.SetAsLastSibling();
         playerIcone[gid * 2 + uid].HeadSelect.gameObject.SetActive(true);
-        playerIcone[gid * 2 + uid].ConfirmMaskImage.gameObject.SetActive(false);
-        playerIcone[gid * 2 + uid].NameText.text = playerName;
-        playerIcone[gid * 2 + uid].ConfirmFrameImage.gameObject.SetActive(false);
         playerIcone[gid * 2 + uid].ChooseFrameImage.gameObject.SetActive(true);
-        playerIcone[gid * 2 + uid].CrownImage.gameObject.SetActive(false);
     }
 }

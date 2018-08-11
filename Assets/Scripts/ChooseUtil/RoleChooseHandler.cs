@@ -35,7 +35,7 @@ public class RoleChooseHandler : MonoBehaviour
                 int gId = Client.Instance.gId;
                 int uId = Client.Instance.uId;
                 SendConfirmMessage(gId, uId);
-                roleChoosingUiController.OnConfirm(gId, uId, Client.Instance.playerName);
+                roleChoosingUiController.OnConfirm(gId, uId);
                 gamePanelUIController.showIconeAndName(gId, uId, Client.Instance.playerName);
                 Debug.Log("确定了");
             });
@@ -102,7 +102,7 @@ public class RoleChooseHandler : MonoBehaviour
             {
                 Client.Instance.gId = gid;
                 Client.Instance.uId = uid;
-                roleChoosingUiController.SetRoleSelected(Client.Instance.gId, Client.Instance.uId, Client.Instance.playerName);
+                roleChoosingUiController.SetRoleSelected(Client.Instance.gId, Client.Instance.uId);
                 continue;
             }
             roleChoosingUiController.SetButtonRoleUnavailable(gid, uid);
@@ -113,11 +113,13 @@ public class RoleChooseHandler : MonoBehaviour
             int roleId = session2roles[session];
             if (session == Client.Instance.sessionId)
             {
-                roleChoosingUiController.OnConfirm(roleId/2, roleId%2, Client.Instance.playerName);
+                roleChoosingUiController.OnConfirm(roleId/2, roleId%2);
             }
             else
             {
-                roleChoosingUiController.SetButtonRoleLocked(roleId / 2, roleId % 2);
+                // 此处 其他玩家确认和其他玩家选择中的显示调用同一个函数
+                roleChoosingUiController.SetButtonRoleUnavailable(roleId / 2, roleId % 2);
+                //roleChoosingUiController.SetButtonRoleLocked(roleId / 2, roleId % 2);
             }
         }
 
