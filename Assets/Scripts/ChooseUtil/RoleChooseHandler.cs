@@ -72,7 +72,7 @@ public class RoleChooseHandler : MonoBehaviour
 
         int newGid = i / 2;
         int newUid = i % 2;
-        ChooseRequestMsg chooseRequest = new ChooseRequestMsg(Client.Instance.curRoomId, newGid, newUid, Client.Instance.playerName);
+        ChooseRequestMsg chooseRequest = new ChooseRequestMsg(Client.Instance.curRoomId, newGid, newUid, Client.Instance.playerName, Client.Instance.sessionId);
         if (networkClient == null) networkClient = Client.Instance.networkClient;
         networkClient.Send(CustomMsgType.Choose, chooseRequest);
         Debug.Log("send " + chooseRequest);
@@ -89,6 +89,7 @@ public class RoleChooseHandler : MonoBehaviour
     public void SetButtonStates(Dictionary<int, string> session2names, Dictionary<int, int> session2roles,
         HashSet<int> session2confirm)
     {
+        Debug.Log("SetButtonStates: sessionId" + Client.Instance.sessionId);
         for (int i = 0; i < 8; i++)
         {
             roleChoosingUiController.SetButtonRoleAvailable(i / 2, i % 2);
@@ -137,6 +138,7 @@ public class RoleChooseHandler : MonoBehaviour
     public void OnReceiveRoleState(NetworkMessage netmsg)
     {
         RoleStateMsg roleStatesMsg = netmsg.ReadMessage<RoleStateMsg>();
+        Debug.Log(roleStatesMsg + " " +Client.Instance.sessionId);
         var session2names = roleStatesMsg.GetSessionToName();
         var session2roles = roleStatesMsg.GetSessionToRole();
         var session2confirm = roleStatesMsg.GetSesssion2Confirm();
