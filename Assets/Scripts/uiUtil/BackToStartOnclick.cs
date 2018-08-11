@@ -13,9 +13,8 @@ public class BackToStartOnclick : MonoBehaviour
 		Button prepareButton = GetComponent<Button>();
 		prepareButton.onClick.AddListener(delegate
 		{
-			Client.Instance.networkClient.Disconnect();
 			Client.Instance.InRoom = false;
-			panelController.SwitchToStageUI(Stage.StartStage);
+			panelController.SwitchToStage(Stage.StartStage);
 		});
 	}
 	

@@ -16,6 +16,7 @@ public class ReConnectHandler: MonoBehaviour
     // 在PlayerPref中存的sessionID，每个sessionID表示特定游戏场次中的特定玩家
     static public string SESSION_NAME = "cool_sessionId";
 
+    public bool tryingReConnect;
     private void Start()
     {    
         if (panelController == null)
@@ -43,8 +44,7 @@ public class ReConnectHandler: MonoBehaviour
                 {
                     // Todo 询问session时如果没有属于自己的sessionID，说明玩家误入游戏房间, 要怎么告诉玩家当前不能游戏，maybe跳到一个提示界面，告玩家当前游戏不可用
                     Debug.Log("该玩家没有sessionID，不能进行断线重连");
-                    Client.Instance.networkClient.Disconnect();
-                    panelController.SwitchToStageUI(Stage.StartStage);
+                    panelController.SwitchToStage(Stage.StartStage);
                     return;
                 }
             }
@@ -67,6 +67,7 @@ public class ReConnectHandler: MonoBehaviour
                  */
                 if (Client.Instance.InRoom)
                 {
+                    Debug.Log("进入不该进的房间curRoomId: " + Client.Instance.curRoomId + "sessionInfo :" + sessionMsg);
                     Client.Instance.InRoom = false;
                     panelController.SwitchToStage(Stage.StartStage);
                 }
@@ -122,33 +123,35 @@ public class ReConnectHandler: MonoBehaviour
         }
     }
 
+    public void OnConnect(NetworkMessage netmsg)
+    {
+        if (tryingReConnect)
+        {
+            Debug.Log("reconnected！");
+        }
+        tryingReConnect = false;
+    }
+
     private IEnumerator TryToReConnect()
     {
         int curReconnectTimes = 0;
+        tryingReConnect = true;
         Text errorText = panelController.reconnectErrorText;
-        while (!Client.Instance.networkClient.isConnected && (curReconnectTimes++ < maxReconnectTimes))
+        while (tryingReConnect && !Client.Instance.networkClient.isConnected && (curReconnectTimes++ < maxReconnectTimes))
         {
             Client.Instance.networkClient.Connect(Client.ipv4, Client.portTCP); 
             string errorMsg = "重连第" + curReconnectTimes  +"次";
             Debug.Log(errorMsg);
             errorText.text = errorMsg;
             yield return new WaitForSeconds(waitTimePerTry);
-            if (!Client.Instance.networkClient.isConnected)
-            {
-                Client.Instance.networkClient.Disconnect();
-            }
-        }
-
-        if (Client.Instance.networkClient.isConnected)
-        {
-            Debug.Log("reconnected！");
-        }
-        else
-        {
-            Debug.Log("can not reconnected");
+//            if (!Client.Instance.networkClient.isConnected)
+//            {
+//                Client.Instance.networkClient.Disconnect();
+//            }
         }
 
         curReconnectTimes = 0;
+        tryingReConnect = false;
     }
 
   

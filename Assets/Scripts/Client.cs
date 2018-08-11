@@ -90,7 +90,8 @@ public class Client : MonoBehaviour
 
     private void OnConnect(NetworkMessage netmsg)
     {
-        Debug.Log("client connected" + netmsg.conn);
+        reconnectHandler.OnConnect(netmsg);
+//        Debug.Log("client connected" + netmsg.conn);
 
 //        if (stage == Stage.Prepare)
 //        {

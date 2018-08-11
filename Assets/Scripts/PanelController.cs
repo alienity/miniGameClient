@@ -23,6 +23,7 @@ public class PanelController : MonoBehaviour
     private List<GameObject> panels = new List<GameObject>();
     private JoystickHandler joystickHandler;
     private RoleChoosingUIController roleChoosingUIController;
+    private ReConnectHandler reConnectHandler;
 
 
     private void Awake()
@@ -45,6 +46,7 @@ public class PanelController : MonoBehaviour
     {
         joystickHandler = FindObjectOfType<JoystickHandler>();
         roleChoosingUIController = FindObjectOfType<RoleChoosingUIController>();
+        reConnectHandler = FindObjectOfType<ReConnectHandler>();
         Debug.Assert(joystickHandler != null);
         SwitchToStage(Stage.StartStage);
     }
@@ -84,6 +86,7 @@ public class PanelController : MonoBehaviour
                 {
                     Client.Instance.networkClient.Disconnect();
                 }
+                reConnectHandler.tryingReConnect = false;
 
                 break;
             case Stage.Prepare:
