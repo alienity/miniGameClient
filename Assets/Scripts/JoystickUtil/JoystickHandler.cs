@@ -19,7 +19,8 @@ public class JoystickHandler : MonoBehaviour
     public Image touchStartImg;
     public Image touchEndImg;
 
-    private Vector2 curOffset = Vector2.zero;
+//    private Vector2 curOffset = Vector2.zero;
+    private Vector2 startTouchPos = Vector2.zero;
     // 蓄力对象
     public ETCButton pigButton;
     public ETCButton penguButton;
@@ -54,7 +55,7 @@ public class JoystickHandler : MonoBehaviour
     private void InitPenguTouchpad()
     {
         eTCTouchPad.onTouchStart.AddListener(OnPenguChargeStartTouchPad);
-        eTCTouchPad.onMoveSpeed.AddListener(OnPenguChargeNowTouchPad);
+        eTCTouchPad.onMove.AddListener(OnPenguChargeNowTouchPad);
         eTCTouchPad.onTouchUp.AddListener(OnPenguChargeOverTouchPad);
         touchStartImg.raycastTarget = false;
         touchEndImg.raycastTarget = false;
@@ -154,7 +155,6 @@ public class JoystickHandler : MonoBehaviour
     
     public void OnPenguChargeStartTouchPad()
     {
-        curOffset = Vector2.zero;
         chargeStartTime = Time.time;
         
         // 显示起始按钮
@@ -164,11 +164,13 @@ public class JoystickHandler : MonoBehaviour
             Debug.Log("torch postion: " + touch.position);
             touchStartImg.GetComponent<Transform>().position = touch.position;
             touchEndImg.GetComponent<Transform>().position = touch.position;
+            startTouchPos = touch.position;
         }
         else
         {
             touchStartImg.GetComponent<Transform>().position = Input.mousePosition;
             touchEndImg.GetComponent<Transform>().position = Input.mousePosition;
+            startTouchPos = Input.mousePosition;
         }
 
         touchStartImg.enabled = true;
@@ -179,10 +181,8 @@ public class JoystickHandler : MonoBehaviour
     
     public void OnPenguChargeNowTouchPad(Vector2 speed)
     {
-        curOffset.x += speed.x * Time.fixedDeltaTime;
-        curOffset.y += speed.y * Time.fixedDeltaTime;
-        JoystickMsg jsm = new JoystickMsg(Client.Instance.gId, Client.Instance.uId, curOffset);
-        jcmQueue.Enqueue(jsm);
+
+        JoystickMsg jsm;
         
         
         // 显示手指当前位置
@@ -191,13 +191,15 @@ public class JoystickHandler : MonoBehaviour
             Touch touch = Input.GetTouch(0);
             Debug.Log("torch postion: " + touch.position);
             touchEndImg.GetComponent<Transform>().position = touch.position;
+            jsm = new JoystickMsg(Client.Instance.gId, Client.Instance.uId, touch.position - startTouchPos);
         }
         else
         {
             touchEndImg.GetComponent<Transform>().position = Input.mousePosition;
-
+            jsm = new JoystickMsg(Client.Instance.gId, Client.Instance.uId, new Vector2(Input.mousePosition.x, Input.mousePosition.y) - startTouchPos);
         }
 
+        jcmQueue.Enqueue(jsm);
     }
 
     public void OnPenguChargeOverTouchPad()
