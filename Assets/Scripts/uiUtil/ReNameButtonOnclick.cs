@@ -3,7 +3,7 @@
  
  public class ReNameButtonOnclick: MonoBehaviour
  {
-     private PanelController panelController;
+    private PanelController panelController;
      private void Start()
      {
          panelController = FindObjectOfType<PanelController>();

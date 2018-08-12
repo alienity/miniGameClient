@@ -25,9 +25,11 @@ public class RoleChoosingUIController : MonoBehaviour
     }
     public List<PlayerIcone> playerIcone = new List<PlayerIcone>();
     [HideInInspector] public Button[] buttons;
+    public AudioClip SwithCharacterAudio;
 
     public List<Image> BarImages;
     public List<Button> ConfirmButtons;
+    public AudioClip SelectCharacterAudio;
 
     private List<string> defaultNames = new List<string>()
     {
@@ -172,5 +174,19 @@ public class RoleChoosingUIController : MonoBehaviour
         BarImages[gid].gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].HeadSelect.gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].ChooseFrameImage.gameObject.SetActive(true);
+    }
+
+    public void SelectCharactorAudioPlay()
+    {
+        this.gameObject.GetComponent<AudioSource>().clip = SelectCharacterAudio;
+        //this.gameObject.GetComponent<AudioSource>().pitch = 2;
+        this.gameObject.GetComponent<AudioSource>().Play();
+    }
+
+    public void SwitchCharactorAudioPlay()
+    {
+        this.gameObject.GetComponent<AudioSource>().clip = SwithCharacterAudio;
+        //this.gameObject.GetComponent<AudioSource>().pitch = 2;
+        this.gameObject.GetComponent<AudioSource>().Play();
     }
 }

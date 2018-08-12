@@ -7,7 +7,9 @@ using DG.Tweening;
 public class PanelController : MonoBehaviour
 {
     public Image blackImage;
-    public Button   StartPanelButton;
+    public Button StartPanelButton;
+    public Button ToPosterButton;
+    public AudioClip NormalButtonAudio;
     public GameObject preparePanel;
     public GameObject startPanel;
     public GameObject connectingToRoomPanel;
@@ -57,12 +59,16 @@ public class PanelController : MonoBehaviour
         StartPanelButton.onClick.AddListener(delegate
         {
             Debug.Log("进入游戏准备界面按键按下");
+            ButtonOnChickAudioPlay();
             Sequence seq = DOTween.Sequence();
             seq.Append(blackImage.DOFade(0.8f, 1f));
             StartPanelButton.gameObject.SetActive(false);
             SwitchToStageUI(Stage.StartStage);
         });
-
+        ToPosterButton.onClick.AddListener(delegate
+        {
+            SwitchToStageUI(Stage.PosterStage);
+        });
     }
 
     // 手动切换界面
@@ -163,10 +169,12 @@ public class PanelController : MonoBehaviour
         switch (stage)
         {
             case Stage.StartStage:
+                ButtonOnChickAudioPlay();
                 startPanel.SetActive(true);
                 connectingToRoomPanel.SetActive(false);
                 break;
             case Stage.Prepare:
+                ButtonOnChickAudioPlay();
                 startPanel.SetActive(true);
                 connectingToRoomPanel.SetActive(true);
                 break;
@@ -191,6 +199,7 @@ public class PanelController : MonoBehaviour
                 }
                 break;
             case Stage.ProducerListStage:
+                ButtonOnChickAudioPlay();
                 producerListPanel.SetActive(true);
                 break;
             case Stage.OfflineStage:
@@ -201,10 +210,27 @@ public class PanelController : MonoBehaviour
                 gameOverPanel.SetActive(true);
                 break;
             case Stage.ChangeNameStage:
+                ButtonOnChickAudioPlay();
                 preparePanel.SetActive(true);
+                break;
+
+            case Stage.PosterStage:
+                Debug.Log("切换回海报页面");
+                ButtonOnChickAudioPlay();
+                //startPanel.SetActive(false);
+                StartPanelButton.gameObject.SetActive(true);
+                Sequence seq = DOTween.Sequence();
+                seq.Append(blackImage.DOFade(0f, 1f));
                 break;
         }
 
         Client.Instance.stage = stage;
+    }
+
+    private void ButtonOnChickAudioPlay()
+    {
+        this.gameObject.GetComponent<AudioSource>().clip = NormalButtonAudio;
+        this.gameObject.GetComponent<AudioSource>().pitch = 2;
+        this.gameObject.GetComponent<AudioSource>().Play();
     }
 }

@@ -36,6 +36,8 @@ public class RoleChooseHandler : MonoBehaviour
         {
             button.onClick.AddListener(delegate
             {
+                // 音效
+                roleChoosingUiController.SelectCharactorAudioPlay();
                 int gId = Client.Instance.gId;
                 int uId = Client.Instance.uId;
                 SendConfirmMessage(gId, uId);
@@ -69,7 +71,8 @@ public class RoleChooseHandler : MonoBehaviour
     {
         int i;
         for (i = 0; i < 8 && roleChoosingUiController.buttons[i] != selectButton; i++) ;
-
+        // 音效
+        roleChoosingUiController.SwitchCharactorAudioPlay();
         if (i == 8)
         {
             Debug.LogError("button not found");

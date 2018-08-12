@@ -13,7 +13,10 @@ public class ProducerListButtonOnclick : MonoBehaviour {
         panelController = FindObjectOfType<PanelController>();
         Button producerListButton = GetComponent<Button>();
         // 进入制作者名单界面
-        producerListButton.onClick.AddListener(delegate { panelController.SwitchToStage(Stage.ProducerListStage); });
+        producerListButton.onClick.AddListener(delegate 
+        {
+            panelController.SwitchToStage(Stage.ProducerListStage);
+        });
 
     }
 }

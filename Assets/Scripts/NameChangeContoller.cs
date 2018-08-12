@@ -6,7 +6,7 @@ public class NameChangeContoller : MonoBehaviour
     public InputField inputField;
     private PanelController panelController;
     public Button submitButton;
-
+    public AudioClip NormalButtonAudio;
 
     public static string NameProperty = "playerName";
 
@@ -24,6 +24,9 @@ public class NameChangeContoller : MonoBehaviour
 
         submitButton.onClick.AddListener(delegate
         {
+            this.gameObject.GetComponent<AudioSource>().clip = NormalButtonAudio;
+            this.gameObject.GetComponent<AudioSource>().pitch = 2;
+            this.gameObject.GetComponent<AudioSource>().Play();
             Debug.Log("submit name");
             Client.Instance.playerName = inputField.text;
             PlayerPrefs.SetString(NameProperty, inputField.text);

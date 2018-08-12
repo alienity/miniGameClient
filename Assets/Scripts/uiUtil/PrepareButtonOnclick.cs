@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PrepareButtonOnclick : MonoBehaviour
 {
-	private PanelController panelController;
+    private PanelController panelController;
 	
 	// Use this for initialization
 	void Start ()
@@ -17,7 +17,7 @@ public class PrepareButtonOnclick : MonoBehaviour
 		{
 			if (Client.Instance.stage == Stage.StartStage && Client.ipv4 != null)
 			{
-				Debug.Log("switch to stage prepare");
+                Debug.Log("switch to stage prepare");
 				panelController.SwitchToStageUI(Stage.Prepare);
 				Client.Instance.StartClient();
 			}

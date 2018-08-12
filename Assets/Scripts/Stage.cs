@@ -8,5 +8,6 @@
      GameOverStage,
      ChangeNameStage,
      ProducerListStage,
-     ConnectedToChooseRoomStage // 表示开始游戏后连接到服务器但是还没开始选角色的界面
+     ConnectedToChooseRoomStage, // 表示开始游戏后连接到服务器但是还没开始选角色的界面
+     PosterStage    // 海报界面
 }
