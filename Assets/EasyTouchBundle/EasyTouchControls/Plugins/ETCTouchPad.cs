@@ -386,8 +386,8 @@ public class ETCTouchPad : ETCBase,IBeginDragHandler, IDragHandler,IPointerEnter
 				cachedImage.color = new Color(0,0,0,0);
 			}
 			else{
-				cachedImage.color = new Color(1,1,1,1);
-			}
+				cachedImage.color = new Color(1,1,1,0);// branzhao 原始为 new Color(1,1,1,0);
+            }
 		}
 	
 	}
