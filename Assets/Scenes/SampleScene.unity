@@ -545,7 +545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputField: {fileID: 1200682612}
   submitButton: {fileID: 1069475214}
-  NormalButtonAudio: {fileID: 8300000, guid: 94548ab916dc84847b9e3de3249652a7, type: 3}
+  NormalButtonAudio: {fileID: 8300000, guid: c7149a67958cc7b42baad472de60fb88, type: 3}
 --- !u!114 &147477004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5547,10 +5547,10 @@ RectTransform:
   m_Father: {fileID: 1200682611}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -0.5}
-  m_SizeDelta: {x: -20, y: -13}
+  m_SizeDelta: {x: 1312, y: 295}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1797465238
 MonoBehaviour:
@@ -5573,16 +5573,16 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 4d55aebc9f26535459e8a104cab83905, type: 3}
-    m_FontSize: 50
-    m_FontStyle: 0
+    m_Font: {fileID: 12800000, guid: e633b63878b67ca44bd9c79126e61632, type: 3}
+    m_FontSize: 100
+    m_FontStyle: 2
     m_BestFit: 0
     m_MinSize: 5
-    m_MaxSize: 50
+    m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
@@ -5624,7 +5624,7 @@ MonoBehaviour:
   blackImage: {fileID: 264960395}
   StartPanelButton: {fileID: 1708363931}
   ToPosterButton: {fileID: 1015591331}
-  NormalButtonAudio: {fileID: 8300000, guid: 94548ab916dc84847b9e3de3249652a7, type: 3}
+  NormalButtonAudio: {fileID: 8300000, guid: c7149a67958cc7b42baad472de60fb88, type: 3}
   preparePanel: {fileID: 514676811}
   startPanel: {fileID: 1712435329}
   connectingToRoomPanel: {fileID: 1725296999}
