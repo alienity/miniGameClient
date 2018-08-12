@@ -4,6 +4,8 @@ using UnityEngine.Networking;
 
 public class AdvanceControlHandler: MonoBehaviour
 {
+
+    private bool isViberating;
     /*
      * 在这里写回调，然后在 Client.StartClient 把回调注册上去
      * 可以自己定义消息体来用来分辨后面多加的功能，比如震动、声音什么
@@ -29,9 +31,15 @@ public class AdvanceControlHandler: MonoBehaviour
         WaitForSeconds wait = new WaitForSeconds(interval);
         for (float time = 0;  time < duration; time += interval)
         {
-            Handheld.Vibrate();
+            if (!isViberating)
+            {
+                isViberating = true;
+                Handheld.Vibrate();
+            }
             yield return wait;
+            isViberating = false;
         }
+        isViberating = false;
     }
     
     

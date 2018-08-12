@@ -144,13 +144,7 @@ public class ReConnectHandler: MonoBehaviour
             Debug.Log(errorMsg);
             errorText.text = errorMsg;
             yield return new WaitForSeconds(waitTimePerTry);
-//            if (!Client.Instance.networkClient.isConnected)
-//            {
-//                Client.Instance.networkClient.Disconnect();
-//            }
         }
-
-        curReconnectTimes = 0;
         tryingReConnect = false;
     }
 

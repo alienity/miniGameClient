@@ -54,6 +54,8 @@ public class JoystickHandler : MonoBehaviour
 
 //    private Vector2 curOffset = Vector2.zero;
     private Vector2 startTouchPos = Vector2.zero;
+
+    private bool touchStart;
     // 蓄力对象
     public ETCButton pigButton;
     public ETCButton penguButton;
@@ -78,10 +80,7 @@ public class JoystickHandler : MonoBehaviour
         if (gamePanelUIController == null)
             gamePanelUIController = FindObjectOfType<GamePanelUIController>();
         Debug.Log("JoystickHandler start");
-        if (eTCTouchPad == null)
-        {
-            Debug.LogError("eTCTouchPad == null");
-        }
+        
         InitPigJoystick();
         InitPenguTouchpad();
         InitPenguJoystick();
@@ -234,6 +233,7 @@ public class JoystickHandler : MonoBehaviour
 
         touchStartImg.enabled = true;
         touchEndImg.enabled = true;
+        touchStart = true;
 
     }
 
@@ -248,7 +248,7 @@ public class JoystickHandler : MonoBehaviour
         if (Input.touchSupported)
         {
             Touch touch = Input.GetTouch(0);
-            Debug.Log("torch postion: " + touch.position);
+//            Debug.Log("torch postion: " + touch.position);
             touchEndImg.GetComponent<Transform>().position = touch.position;
             jsm = new JoystickMsg(Client.Instance.gId, Client.Instance.uId, touch.position - startTouchPos);
         }
@@ -267,11 +267,13 @@ public class JoystickHandler : MonoBehaviour
         csmQueue.Enqueue(csm);
         touchStartImg.enabled = true;
         touchEndImg.enabled = true;
+        touchEndImg.GetComponent<Transform>().position = startTouchPos;
+        touchStart = false;
     }
 
     private void PenguTouchPadCharge()
     {
-        if (touchStartImg.isActiveAndEnabled)
+        if (touchStart)
         {
             ChargeSkillMsg csm = new ChargeSkillMsg(Client.Instance.gId, Client.Instance.uId, chargeStartTime.ToString(), Time.time, 0);
 //                Debug.Log("OnCharge " + csm);

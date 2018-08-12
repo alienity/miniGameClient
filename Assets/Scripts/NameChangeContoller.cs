@@ -14,7 +14,7 @@ public class NameChangeContoller : MonoBehaviour
     {
 //        PlayerPrefs.DeleteKey(NameProperty);
         panelController = FindObjectOfType<PanelController>();
-        if (PlayerPrefs.HasKey(NameProperty))
+        if (PlayerPrefs.HasKey(NameProperty) && PlayerPrefs.GetString(NameProperty) != "")
         {
             Client.Instance.playerName = PlayerPrefs.GetString(NameProperty);
             // panelController.SwitchToStageUI(Stage.StartStage);
