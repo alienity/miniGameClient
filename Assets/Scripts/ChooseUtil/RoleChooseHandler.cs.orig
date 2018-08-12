@@ -8,7 +8,6 @@ public class RoleChooseHandler : MonoBehaviour
     private RoleChoosingUIController roleChoosingUiController;
     private GamePanelUIController gamePanelUIController;
     private NetworkClient networkClient;
-    private JoystickHandler joystickHandler;
 
     private void Start()
     {
@@ -16,9 +15,6 @@ public class RoleChooseHandler : MonoBehaviour
             roleChoosingUiController = FindObjectOfType<RoleChoosingUIController>();
         if (gamePanelUIController == null)
             gamePanelUIController = FindObjectOfType<GamePanelUIController>();
-        if(joystickHandler == null)
-            joystickHandler = FindObjectOfType<JoystickHandler>();
-
         Debug.Assert(roleChoosingUiController != null);
         InitAllButtons();
     }
@@ -41,7 +37,6 @@ public class RoleChooseHandler : MonoBehaviour
                 SendConfirmMessage(gId, uId);
                 roleChoosingUiController.OnConfirm(gId, uId);
                 gamePanelUIController.showIconeAndName(gId, uId, Client.Instance.playerName);
-                joystickHandler.SetJoystickPanelUI(gId, uId, Client.Instance.playerName);
                 Debug.Log("确定了");
             });
         }
@@ -143,7 +138,11 @@ public class RoleChooseHandler : MonoBehaviour
     public void OnReceiveRoleState(NetworkMessage netmsg)
     {
         RoleStateMsg roleStatesMsg = netmsg.ReadMessage<RoleStateMsg>();
+<<<<<<< Updated upstream
         Debug.Log(roleStatesMsg + " " +Client.Instance.sessionId);
+=======
+        Debug.Log(roleStatesMsg +" " +Client.Instance.sessionId);
+>>>>>>> Stashed changes
         var session2names = roleStatesMsg.GetSessionToName();
         var session2roles = roleStatesMsg.GetSessionToRole();
         var session2confirm = roleStatesMsg.GetSesssion2Confirm();

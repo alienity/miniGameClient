@@ -17,7 +17,7 @@ public class NameChangeContoller : MonoBehaviour
         if (PlayerPrefs.HasKey(NameProperty))
         {
             Client.Instance.playerName = PlayerPrefs.GetString(NameProperty);
-            panelController.SwitchToStageUI(Stage.StartStage);
+            // panelController.SwitchToStageUI(Stage.StartStage);
         }
 
         Debug.Log("name changer");

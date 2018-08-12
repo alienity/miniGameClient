@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PanelController : MonoBehaviour
 {
+    public Image blackImage;
+    public Button   StartPanelButton;
     public GameObject preparePanel;
     public GameObject startPanel;
     public GameObject connectingToRoomPanel;
@@ -48,7 +51,18 @@ public class PanelController : MonoBehaviour
         roleChoosingUIController = FindObjectOfType<RoleChoosingUIController>();
         reConnectHandler = FindObjectOfType<ReConnectHandler>();
         Debug.Assert(joystickHandler != null);
-        SwitchToStage(Stage.StartStage);
+        // SwitchToStage(Stage.StartStage);
+        // 修改为按键按下后切换到游戏StartStage
+        StartPanelButton.gameObject.SetActive(true);
+        StartPanelButton.onClick.AddListener(delegate
+        {
+            Debug.Log("进入游戏准备界面按键按下");
+            Sequence seq = DOTween.Sequence();
+            seq.Append(blackImage.DOFade(0.8f, 1f));
+            StartPanelButton.gameObject.SetActive(false);
+            SwitchToStageUI(Stage.StartStage);
+        });
+
     }
 
     // 手动切换界面

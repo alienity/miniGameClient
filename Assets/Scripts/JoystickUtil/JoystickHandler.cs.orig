@@ -221,13 +221,13 @@ public class JoystickHandler : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
             Debug.Log("torch postion: " + touch.position);
-            touchStartImg.GetComponent<Transform>().position = touch.position + PenguStickAxisCorrected; // 添加坐标修正量;
+            touchStartImg.GetComponent<Transform>().position = touch.position + PenguStickAxisCorrected; // 添加坐标修正量
             touchEndImg.GetComponent<Transform>().position = touch.position;
             startTouchPos = touch.position;
         }
         else
         {
-            touchStartImg.GetComponent<Transform>().position = Input.mousePosition+ mousePenguStickAxisCorrected; // 添加坐标修正量
+            touchStartImg.GetComponent<Transform>().position = Input.mousePosition + mousePenguStickAxisCorrected; // 添加坐标修正量
             touchEndImg.GetComponent<Transform>().position = Input.mousePosition;
             startTouchPos = Input.mousePosition;
         }
@@ -240,9 +240,17 @@ public class JoystickHandler : MonoBehaviour
     
     public void OnPenguChargeNowTouchPad(Vector2 speed)
     {
+<<<<<<< Updated upstream
 
         JoystickMsg jsm;
         
+=======
+        curOffset.x += speed.x * Time.fixedDeltaTime;
+        curOffset.y += speed.y * Time.fixedDeltaTime;
+        JoystickMsg jsm = new JoystickMsg(Client.Instance.gId, Client.Instance.uId, curOffset);
+        jcmQueue.Enqueue(jsm);
+        Debug.Log("OnPenguChargeNowTouchPad(Vector2 speed)");
+>>>>>>> Stashed changes
         
         // 显示手指当前位置
         if (Input.touchSupported)
@@ -254,6 +262,7 @@ public class JoystickHandler : MonoBehaviour
         }
         else
         {
+            Debug.Log("Input.mousePosition: " + Input.mousePosition);
             touchEndImg.GetComponent<Transform>().position = Input.mousePosition;
             jsm = new JoystickMsg(Client.Instance.gId, Client.Instance.uId, new Vector2(Input.mousePosition.x, Input.mousePosition.y) - startTouchPos);
         }
