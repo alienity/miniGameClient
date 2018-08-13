@@ -7,6 +7,7 @@ using UnityEngineInternal;
 
 public class RoleChoosingUIController : MonoBehaviour
 {
+    public Text RemendText;
     public List<Sprite> BackgroundSprites;
     public Image BackgroundImage;
 
@@ -49,7 +50,7 @@ public class RoleChoosingUIController : MonoBehaviour
 
     public void InitBackSpritesUI()
     {
-
+        RemendText.text = "当前未选择";
         BackgroundImage.sprite = null;
         int i = 0;
         foreach (PlayerIcone pIcone in playerIcone)
@@ -98,7 +99,8 @@ public class RoleChoosingUIController : MonoBehaviour
     {
         //if (roleSelected)
         //{
-            // 在其他备选按钮添加遮罩
+        // 在其他备选按钮添加遮罩
+            RemendText.text = "已确认";
             for (int i = 0; i < 8; ++i)
             {
                 if(i != gid * 2 + uid)

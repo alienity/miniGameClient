@@ -106,7 +106,8 @@ public class PanelController : MonoBehaviour
                 {
                     Client.Instance.networkClient.Disconnect();
                 }
-                reConnectHandler.tryingReConnect = false;
+                if(reConnectHandler != null)
+                    reConnectHandler.tryingReConnect = false;
 
                 break;
             case Stage.Prepare:
@@ -230,7 +231,7 @@ public class PanelController : MonoBehaviour
     private void ButtonOnChickAudioPlay()
     {
         this.gameObject.GetComponent<AudioSource>().clip = NormalButtonAudio;
-        this.gameObject.GetComponent<AudioSource>().pitch = 2;
+        //this.gameObject.GetComponent<AudioSource>().pitch = 2;
         this.gameObject.GetComponent<AudioSource>().Play();
     }
 }

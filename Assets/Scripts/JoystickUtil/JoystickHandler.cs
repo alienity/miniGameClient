@@ -18,28 +18,42 @@ public class JoystickHandler : MonoBehaviour
         public Sprite PigJoystickSprite;
         public Sprite ThumbSprite;
         public Sprite PigRushButtonSprite;
-        public Color NameTextSprite;
+        public Color NameTextColor;
     }
     public List<PigJoystickSprites> pigJsSprites = new List<PigJoystickSprites>();
     public Image PigJsBackgroundImage;
     public Image PigJoystickImage;
-    public Image ThumbImage;
-    //public Image PigRushButtonImage;
-    public Text pigPlayerNameText;
+    public Image PigThumbImage;
+    public Text pigJsPlayerNameText;
     
+    //[System.Serializable]
+    //public struct PenguTouchPadSprites
+    //{
+    //    public Sprite BackgroundSprite;
+    //    public Sprite TouchStartSprite;
+    //    public Sprite CircleSprite;
+    //    public Sprite TouchEndSprite;
+    //    public Color NameTextSprite;
+    //}
+    //public List<PenguTouchPadSprites> penguTpSprites = new List<PenguTouchPadSprites>();
+    //public Image PenguTpBackgroundImage;
+    //public Image CircleImage;
+    //public Text penguTpPlayerNameText;
+
     [System.Serializable]
-    public struct PenguTouchPadSprites
+    public struct PenguJoystickSprites
     {
         public Sprite BackgroundSprite;
-        public Sprite TouchStartSprite;
-        public Sprite CircleSprite;
-        public Sprite TouchEndSprite;
-        public Color NameTextSprite;
+        public Sprite PenguJoystickSprite;
+        public Sprite ThumbSprite;
+        public Sprite PenguRushButtonSprite;
+        public Color NameTextColor;
     }
-    public List<PenguTouchPadSprites> penguJsSprites = new List<PenguTouchPadSprites>();
-    public Image PenguBackgroundImage;
-    public Image CircleImage;
-    public Text penguPlayerNameText;
+    public List<PenguJoystickSprites> penguJsSprites = new List<PenguJoystickSprites>();
+    public Image PenguJsBackgroundImage;
+    public Image PenguJoystickImage;
+    public Image PenguThumbImage;
+    public Text PenguJsPlayerNameText;
 
     public Vector2 PenguStickAxisCorrected = new Vector2(0f,94f);
     public Vector3 mousePenguStickAxisCorrected = new Vector3(0f, 94f, 0f);
@@ -116,25 +130,32 @@ public class JoystickHandler : MonoBehaviour
 
     public void SetJoystickPanelUI(int gid, int uid, string playerName)
     {
-        if(uid == 0)
+        if (uid == 0)
         {
-            PenguBackgroundImage.sprite = penguJsSprites[gid].BackgroundSprite;
-            touchStartImg.sprite = penguJsSprites[gid].TouchStartSprite;
-            CircleImage.sprite = penguJsSprites[gid].CircleSprite;
-            touchEndImg.sprite = penguJsSprites[gid].TouchEndSprite;
-            penguPlayerNameText.color = penguJsSprites[gid].NameTextSprite;
-            penguPlayerNameText.text = playerName;
+            //PenguTpBackgroundImage.sprite = penguTpSprites[gid].BackgroundSprite;
+            //touchStartImg.sprite = penguTpSprites[gid].TouchStartSprite;
+            //CircleImage.sprite = penguTpSprites[gid].CircleSprite;
+            //touchEndImg.sprite = penguTpSprites[gid].TouchEndSprite;
+            //penguTpPlayerNameText.color = penguTpSprites[gid].NameTextSprite;
+            //penguTpPlayerNameText.text = playerName;
+            
+            PenguJsBackgroundImage.sprite = penguJsSprites[gid].BackgroundSprite;
+            PenguJoystickImage.sprite = penguJsSprites[gid].PenguJoystickSprite;
+            PenguThumbImage.sprite = penguJsSprites[gid].ThumbSprite;
+            penguButton.normalSprite = penguJsSprites[gid].PenguRushButtonSprite;
+            penguButton.pressedSprite = penguJsSprites[gid].ThumbSprite;
+            PenguJsPlayerNameText.color = penguJsSprites[gid].NameTextColor;
+            PenguJsPlayerNameText.text = playerName;
         }
         else
         {
             PigJsBackgroundImage.sprite = pigJsSprites[gid].BackgroundSprite;
             PigJoystickImage.sprite = pigJsSprites[gid].PigJoystickSprite;
-            ThumbImage.sprite = pigJsSprites[gid].ThumbSprite;
+            PigThumbImage.sprite = pigJsSprites[gid].ThumbSprite;
             pigButton.normalSprite = pigJsSprites[gid].PigRushButtonSprite;
             pigButton.pressedSprite = pigJsSprites[gid].ThumbSprite;
-            //PigRushButtonImage.sprite = pigJsSprites[gid].PigRushButtonSprite;
-            pigPlayerNameText.color = pigJsSprites[gid].NameTextSprite;
-            pigPlayerNameText.text = playerName;
+            pigJsPlayerNameText.color = pigJsSprites[gid].NameTextColor;
+            pigJsPlayerNameText.text = playerName;
         }
     }
     /// <summary>
