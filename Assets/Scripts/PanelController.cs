@@ -189,7 +189,7 @@ public class PanelController : MonoBehaviour
                 joystickHandler.enableControl = true;
                 if (Client.Instance.uId == 0)
                 {
-                    penguTouchPadPanel.SetActive(true);
+                    penguJoystickPanel.SetActive(true);
                     Debug.Log("switch to penguin panel");
                 }
                 else
