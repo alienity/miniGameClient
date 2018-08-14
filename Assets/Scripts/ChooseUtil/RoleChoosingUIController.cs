@@ -8,8 +8,8 @@ using UnityEngineInternal;
 public class RoleChoosingUIController : MonoBehaviour
 {
     public Text RemendText;
-    public List<Sprite> BackgroundSprites;
-    public Image BackgroundImage;
+    //public List<Sprite> BackgroundSprites;
+    //public Image BackgroundImage;
 
     public List<GameObject> AllGroupPanels;
 
@@ -51,7 +51,7 @@ public class RoleChoosingUIController : MonoBehaviour
     public void InitBackSpritesUI()
     {
         RemendText.text = "当前未选择";
-        BackgroundImage.sprite = null;
+        //BackgroundImage.sprite = null;
         int i = 0;
         foreach (PlayerIcone pIcone in playerIcone)
         {
@@ -91,7 +91,6 @@ public class RoleChoosingUIController : MonoBehaviour
         playerIcone[gid * 2 + uid].ChooseFrameImage.gameObject.SetActive(false);
         playerIcone[gid * 2 + uid].ConfirmFrameImage.gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].CrownImage.gameObject.SetActive(true);
-        //buttons[gid * 2 + uid].interactable = false;
     }
 
     // 按下确认键后的操作
@@ -123,7 +122,7 @@ public class RoleChoosingUIController : MonoBehaviour
     public void ResetChooseRoleUI()
     {
         Debug.Log("reset ChooseRole UI");
-
+        RemendText.text = "当前未选择";
         for (int i = 0; i < 8; i++)
         {
             SetButtonRoleAvailable(i / 2, i % 2);
@@ -151,7 +150,6 @@ public class RoleChoosingUIController : MonoBehaviour
 
         BarImages[gid].gameObject.SetActive(false);
         ConfirmButtons[gid].interactable = true;
-        //buttons[gid * 2 + uid].interactable = true;
     }
 
     // 其他玩家选择此角色中(当前其他玩家选择中和已确认均为次状态)
@@ -172,7 +170,7 @@ public class RoleChoosingUIController : MonoBehaviour
         //roleSelected = true;
         playerIcone[gid * 2 + uid].button.interactable = false;
         AllGroupPanels[gid].transform.SetAsLastSibling();
-        BackgroundImage.sprite = BackgroundSprites[gid];
+        //BackgroundImage.sprite = BackgroundSprites[gid];
         BarImages[gid].gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].HeadSelect.gameObject.SetActive(true);
         playerIcone[gid * 2 + uid].ChooseFrameImage.gameObject.SetActive(true);

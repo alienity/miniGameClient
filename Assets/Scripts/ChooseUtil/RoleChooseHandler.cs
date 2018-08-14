@@ -98,6 +98,7 @@ public class RoleChooseHandler : MonoBehaviour
         HashSet<int> session2confirm)
     {
         Debug.Log("SetButtonStates: sessionId" + Client.Instance.sessionId);
+        roleChoosingUiController.RemendText.text = "当前未选择";
         for (int i = 0; i < 8; i++)
         {
             roleChoosingUiController.SetButtonRoleAvailable(i / 2, i % 2);
